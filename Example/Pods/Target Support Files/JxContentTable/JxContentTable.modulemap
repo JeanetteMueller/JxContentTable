@@ -1,0 +1,6 @@
+framework module JxContentTable {
+  umbrella header "JxContentTable-umbrella.h"
+
+  export *
+  module * { export * }
+}

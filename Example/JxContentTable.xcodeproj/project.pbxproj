@@ -12,15 +12,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0642C3534B94332EEF4B2731 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		0642C3534B94332EEF4B2731 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		15A5E73D158054DB8B2ABADD /* Pods-JxContentTable_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JxContentTable_Tests.release.xcconfig"; path = "Target Support Files/Pods-JxContentTable_Tests/Pods-JxContentTable_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* JxContentTable_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JxContentTable_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		626D11A78B5D4CB11514AFA4 /* Pods_JxContentTable_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JxContentTable_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		75BD41C06272DA280EDF8530 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		75BD41C06272DA280EDF8530 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		98515322249970F1106F835B /* Pods-JxContentTable_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JxContentTable_Tests.debug.xcconfig"; path = "Target Support Files/Pods-JxContentTable_Tests/Pods-JxContentTable_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		C92A9A35BBBF18643D4DF298 /* JxContentTable.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = JxContentTable.podspec; path = ../JxContentTable.podspec; sourceTree = "<group>"; };
+		C92A9A35BBBF18643D4DF298 /* JxContentTable.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = JxContentTable.podspec; path = ../JxContentTable.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +95,6 @@
 				98515322249970F1106F835B /* Pods-JxContentTable_Tests.debug.xcconfig */,
 				15A5E73D158054DB8B2ABADD /* Pods-JxContentTable_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -131,10 +130,6 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					607FACCF1AFB9204008FA782 = {
-						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
-					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
@@ -147,6 +142,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

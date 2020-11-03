@@ -1,0 +1,22 @@
+{
+  "name": "JxContentTable",
+  "version": "0.1.0",
+  "summary": "A short description of JxContentTable.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/JeanetteMueller/JxContentTable",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "JeanetteMueller": "themaverick@themaverick.de"
+  },
+  "source": {
+    "git": "https://github.com/JeanetteMueller/JxContentTable.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "JxContentTable/Classes/**/*"
+}

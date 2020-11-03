@@ -1,0 +1,16 @@
+PODS:
+  - JxContentTable (0.1.0)
+
+DEPENDENCIES:
+  - JxContentTable (from `../`)
+
+EXTERNAL SOURCES:
+  JxContentTable:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  JxContentTable: 7324f4d55bfd45b416a805120cd44e0bffe8ac0e
+
+PODFILE CHECKSUM: 039543ad767965d866fda91807670fee1f0f1442
+
+COCOAPODS: 1.9.3
