@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="0.0" reuseIdentifier="BubbleCell" rowHeight="261" id="Zhu-Hn-bFR" customClass="BubbleCell" customModule="Podcat_2" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="333" height="261"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zhu-Hn-bFR" id="XRz-q5-eJB">
+                <rect key="frame" x="0.0" y="0.0" width="333" height="261"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIN-uC-Vni">
+                        <rect key="frame" x="69.5" y="8" width="194.5" height="245"/>
+                        <color key="backgroundColor" red="1" green="0.0" blue="0.14044948369999999" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Season 8  Episode 123" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S3L-dw-JJk">
+                        <rect key="frame" x="93.5" y="8" width="146.5" height="245"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="Ghx-gi-zrf"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="oPM-bf-XxL"/>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="240" id="tZj-1C-bcb"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="bottom" secondItem="iIN-uC-Vni" secondAttribute="bottom" id="0mT-Av-NLC"/>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="leading" secondItem="iIN-uC-Vni" secondAttribute="leading" constant="24" id="GSQ-aq-hCb"/>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="centerX" secondItem="XRz-q5-eJB" secondAttribute="centerX" id="Ql1-er-eBP"/>
+                    <constraint firstItem="iIN-uC-Vni" firstAttribute="top" secondItem="XRz-q5-eJB" secondAttribute="top" constant="8" id="X1Y-qZ-B05"/>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="centerY" secondItem="XRz-q5-eJB" secondAttribute="centerY" id="cUE-5Y-aFj"/>
+                    <constraint firstAttribute="bottom" secondItem="iIN-uC-Vni" secondAttribute="bottom" constant="8" id="iyQ-cd-xUY"/>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="trailing" secondItem="iIN-uC-Vni" secondAttribute="trailing" constant="-24" id="lGu-zF-2ph"/>
+                    <constraint firstItem="S3L-dw-JJk" firstAttribute="top" secondItem="iIN-uC-Vni" secondAttribute="top" id="vIi-rc-7eS"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="bubbleView" destination="iIN-uC-Vni" id="My8-3x-VYh"/>
+                <outlet property="titleLabel" destination="S3L-dw-JJk" id="DiH-p8-vld"/>
+            </connections>
+            <point key="canvasLocation" x="-223.19999999999999" y="52.623688155922046"/>
+        </tableViewCell>
+    </objects>
+</document>

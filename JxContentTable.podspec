@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-  A Library to build up Content Table View Controllers withg a lot of different Cells.
+  A Library to build up Content Table View Controllers withg a lot of different Cells. This helps to Build forms and content tables with ease.
                        DESC
 
   s.homepage         = 'https://github.com/JeanetteMueller/JxContentTable'
@@ -28,15 +28,21 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/JeanetteMueller/JxContentTable.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
-
-  s.source_files = 'JxContentTable/Classes/**/*'
+  s.ios.deployment_target = '11.0'
+  s.swift_versions = ['5.0', '5.1', '5.2', '5.3']
+  s.source_files = 'Classes/**/*.swift', 'Classes/*.swift'
   
-  # s.resource_bundles = {
-  #   'JxContentTable' => ['JxContentTable/Assets/*.png']
-  # }
+  s.resources = "JxContentTable/*.xib"
+  s.resource_bundles = {
+    'JxContentTable' => ['Classes/**/*.xib', 'Classes/*.xib']
+  }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'UIKit' #, 'MapKit'
+  s.dependency 'ScrollableGraphView'
+  s.dependency 'JxThemeManager'
+  
   # s.dependency 'AFNetworking', '~> 2.3'
+  
+  s.pod_target_xcconfig = { 'APPLICATION_EXTENSION_API_ONLY' => 'NO' }
 end
