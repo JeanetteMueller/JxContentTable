@@ -72,9 +72,10 @@ public class StepperCell: DetailViewCell {
     @IBOutlet public weak var titleLabelLeft: NSLayoutConstraint!
     @IBOutlet public weak var upButtonRight: NSLayoutConstraint!
 
+    var longGestureInterval: TimeInterval = 0.5
     var longGestureUp: UILongPressGestureRecognizer?
     var longGestureDown: UILongPressGestureRecognizer?
-    
+    var longGestureSteps: Double = 0
     var longGestureTimer:Timer?
     
     public override func startCell() {
@@ -141,20 +142,48 @@ public class StepperCell: DetailViewCell {
         if sender.state == .began {
             log("start timer")
             
-            self.longGestureTimer?.invalidate()
+            self.longGestureInterval = 0.3
+            self.longGestureSteps = 0
             
-            if sender.view == self.upButton {
-                self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (t) in
-                    self.changeValue(self.stepSize * 5)
-                })
-            }else if sender.view == self.downButton {
-                self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (t) in
-                    self.changeValue(-(self.stepSize * 5))
-                })
-            }
+            
+            self.startRepeatTimer(sender)
+            
+            
         }
         if sender.state == .ended || sender.state == .cancelled {
             self.longGestureTimer?.invalidate()
+        }
+    }
+    func startRepeatTimer(_ sender: UILongPressGestureRecognizer) {
+        
+        self.longGestureTimer?.invalidate()
+        
+        if sender.view == self.upButton {
+            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { (t) in
+                self.changeValue(self.stepSize * 5)
+                self.longGestureSteps += 1
+                
+                if self.longGestureSteps > 2.0 / self.longGestureInterval {
+                    self.longGestureSteps = 0
+                    if self.longGestureInterval > 0.05 {
+                        self.longGestureInterval -= 0.1
+                    }
+                    self.startRepeatTimer(sender)
+                }
+            })
+        }else if sender.view == self.downButton {
+            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { (t) in
+                self.changeValue(-(self.stepSize * 5))
+                self.longGestureSteps += 1
+                
+                if self.longGestureSteps > 2.0 / self.longGestureInterval {
+                    self.longGestureSteps = 0
+                    if self.longGestureInterval > 0.05 {
+                        self.longGestureInterval -= 0.1
+                    }
+                    self.startRepeatTimer(sender)
+                }
+            })
         }
     }
     func changeValue(_ addition: Double) {
