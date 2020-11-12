@@ -8,6 +8,7 @@
 
 import UIKit
 import JxThemeManager
+import JxSwiftHelper
 
 class CaruselCellItem: UICollectionViewCell {
 
@@ -42,49 +43,14 @@ class CaruselCellItem: UICollectionViewCell {
         if let imageUrlString = logoPath {
 
             if let imageView = logoView {
-                let size = CGSize(width: 100, height: 100)
-
-                let quadratSize = CGSize(width: max(size.width, size.height), height: max(size.width, size.height))
-
-                if let imageFromFile = UIImage.getImage(withImageString: imageUrlString, andSize: quadratSize, withMode: theme.artworkContentMode) {
-                    imageView.image = imageFromFile
-                } else if let photoDetails = PhotoRecord(string: imageUrlString) {
-                    photoDetails.image = theme.fallbackImage
-                    startDownloadForRecord(photoDetails: photoDetails)
-                } else {
-                    self.logoView?.image = theme.fallbackImage
-                }
+                
+                imageView.loadImageFromHttpPath(path: imageUrlString,
+                                                fallbackImage: theme.fallbackImage,
+                                                contentMode: theme.artworkLargeContentMode)
             }
         } else {
             self.logoView?.image = theme.fallbackImage
         }
 
-    }
-    func startDownloadForRecord(photoDetails: PhotoRecord) {
-
-        self.logoView?.image = photoDetails.image
-
-        let imageLoader = ImageDownloader(photoRecord: photoDetails)
-
-        imageLoader.completionBlock = {
-            DispatchQueue.main.async {
-
-                if let imageView = self.logoView {
-                    if let e = self.item {
-                        let size = CGSize(width: 100, height: 100)
-                        let quadratSize = CGSize(width: max(size.width, size.height), height: max(size.width, size.height))
-
-                        if let imageString = e.image {
-                            let theme = ThemeManager.currentTheme()
-                            if let imageFromFile = UIImage.getImage(withImageString: imageString, andSize: quadratSize, withMode: theme.artworkContentMode) {
-                                imageView.image = imageFromFile
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        PendingImageOperations.shared.downloadQueue.addOperation(imageLoader)
     }
 }

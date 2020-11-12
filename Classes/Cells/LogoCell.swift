@@ -8,6 +8,7 @@
 
 import UIKit
 import JxThemeManager
+import JxSwiftHelper
 
 public extension UITableViewController {
     func registerLogoCell() {
@@ -69,54 +70,17 @@ public class LogoCell: DetailViewCell {
 
         super.updateAppearance()
     }
-    public func loadLogo(logoPath: String?) {
-
-        self.logo = logoPath
+    public func loadLogo(logoPath: String) {
 
         let theme = ThemeManager.currentTheme()
+        
+        self.logo = logoPath
 
-        if let imageUrlString = self.logo {
-
-            let size = self.logoView.frame.size
-
-            let quadratSize = CGSize(width: max(size.width, size.height), height: max(size.width, size.height))
-
-            if let localImage = UIImage(named: imageUrlString) {
-                self.logoView.image = localImage
-            } else if let imageFromFile = UIImage.getImage(withImageString: imageUrlString, andSize: quadratSize, withMode: theme.artworkLargeContentMode) {
-                self.logoView.image = imageFromFile
-            } else if let photoDetails = PhotoRecord(string: imageUrlString) {
-                photoDetails.image = theme.fallbackImage
-                startDownloadForRecord(photoDetails: photoDetails)
-            } else {
-                self.logoView.image = theme.fallbackImage
-            }
-
-        } else {
-            self.logoView.image = theme.fallbackImage
-        }
-
+        self.logoView.loadImageFromHttpPath(path: logoPath,
+                                            fallbackImage: theme.fallbackImage,
+                                            contentMode: theme.artworkLargeContentMode)
     }
-    public func startDownloadForRecord(photoDetails: PhotoRecord) {
-
-        self.logoView.image = photoDetails.image
-
-        let imageLoader = ImageDownloader(photoRecord: photoDetails)
-
-        imageLoader.completionBlock = {
-            DispatchQueue.main.async {
-
-                let size = self.logoView.frame.size
-                let quadratSize = CGSize(width: max(size.width, size.height), height: max(size.width, size.height))
-                let theme = ThemeManager.currentTheme()
-                if let imageFromFile = UIImage.getImage(withImageString: self.logo!, andSize: quadratSize, withMode: theme.artworkLargeContentMode) {
-                    self.logoView.image = imageFromFile
-                }
-            }
-        }
-
-        PendingImageOperations.shared.downloadQueue.addOperation(imageLoader)
-    }
+    
     public func updateCell(withOffset offset: CGFloat) {
 
         var extra: CGFloat = 0

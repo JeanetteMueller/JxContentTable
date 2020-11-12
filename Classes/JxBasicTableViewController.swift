@@ -7,6 +7,7 @@
 
 import UIKit
 import JxThemeManager
+import JxSwiftHelper
 
 open class JxBasicTableViewController: UITableViewController {
     

@@ -7,6 +7,7 @@
 
 import UIKit
 import JxThemeManager
+import JxSwiftHelper
 
 open class JxContentTableViewController: JxBasicTableViewController, CaruselDelegate {
     
@@ -253,10 +254,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         
                         cell.logoView.accessibilityIgnoresInvertColors = true
                         
-                        if let logoPath = dict["logo"] {
+                        if let logoPath = dict["logo"] as? String {
                             cell.logoView.image = theme.fallbackImage
-                            
-                            cell.loadLogo(logoPath: logoPath as? String)
+                            cell.loadLogo(logoPath: logoPath)
                         } else if let imageName = dict["imageName"] as? String {
                             cell.logoView.image = UIImage(named: imageName)
                         }

@@ -8,6 +8,7 @@
 
 import UIKit
 import JxThemeManager
+import JxSwiftHelper
 
 public extension UITableViewController {
     func registerStepperCell() {
@@ -71,6 +72,20 @@ public class StepperCell: DetailViewCell {
     @IBOutlet public weak var titleLabelLeft: NSLayoutConstraint!
     @IBOutlet public weak var upButtonRight: NSLayoutConstraint!
 
+    var longGestureUp: UILongPressGestureRecognizer?
+    var longGestureDown: UILongPressGestureRecognizer?
+    
+    var longGestureTimer:Timer?
+    
+    public override func startCell() {
+        super.startCell()
+        
+        self.longGestureUp = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress(_:)))
+        upButton.addGestureRecognizer(longGestureUp!)
+        
+        self.longGestureDown = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress(_:)))
+        downButton.addGestureRecognizer(longGestureDown!)
+    }
     public override func unloadCell() {
 
         delegate = nil
@@ -115,30 +130,53 @@ public class StepperCell: DetailViewCell {
         upButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 4, right: 0)
         downButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 4, right: 0)
     }
+    
+    @objc func longPress(_ sender: UILongPressGestureRecognizer) {
+        if sender.view == self.upButton {
+            print("Long press UP")
+        }else if sender.view == self.downButton {
+            print("Long press DOWN")
+        }
+        
+        if sender.state == .began {
+            log("start timer")
+            
+            self.longGestureTimer?.invalidate()
+            
+            if sender.view == self.upButton {
+                self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (t) in
+                    self.changeValue(self.stepSize * 5)
+                })
+            }else if sender.view == self.downButton {
+                self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (t) in
+                    self.changeValue(-(self.stepSize * 5))
+                })
+            }
+        }
+        if sender.state == .ended || sender.state == .cancelled {
+            self.longGestureTimer?.invalidate()
+        }
+    }
+    func changeValue(_ addition: Double) {
+        log("changeValue \(addition)")
+        let newValue = round(1000 * (defaultValue + addition)) / 1000
+        
+        if newValue <= max, newValue >= min {
+            self.valueLabel.text = String(format: displayFormat, newValue)
+            self.defaultValue = newValue
+            
+            self.delegate?.stepperCell(cell: self, changedValue: newValue)
+        }
+    }
     @IBAction func upAction(_ sender: UIButton?) {
         log("StepperCell up")
 
-        let newValue = round(1000 * (defaultValue + stepSize)) / 1000
-
-        if newValue <= max {
-            self.valueLabel.text = String(format: displayFormat, newValue)
-            self.defaultValue = newValue
-
-            self.delegate?.stepperCell(cell: self, changedValue: newValue)
-        }
-
+        self.changeValue(self.stepSize)
     }
     @IBAction func downAction(_ sender: UIButton?) {
         log("StepperCell down")
 
-        let newValue = round(1000 * (defaultValue - stepSize)) / 1000
-
-        if newValue >= min {
-            self.valueLabel.text = String(format: displayFormat, newValue)
-            self.defaultValue = newValue
-
-            self.delegate?.stepperCell(cell: self, changedValue: newValue)
-        }
+        self.changeValue(-(self.stepSize))
     }
 }
 
