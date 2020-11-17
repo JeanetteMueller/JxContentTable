@@ -9,6 +9,7 @@
 import UIKit
 import JxThemeManager
 import JxSwiftHelper
+import JxSwiftHelperForUiKit
 
 class CaruselCellItem: UICollectionViewCell {
 

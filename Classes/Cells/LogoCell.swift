@@ -9,6 +9,8 @@
 import UIKit
 import JxThemeManager
 import JxSwiftHelper
+import JxSwiftHelperForUiKit
+import PinchToZoomImageView
 
 public extension UITableViewController {
     func registerLogoCell() {

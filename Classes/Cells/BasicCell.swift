@@ -10,7 +10,7 @@ import UIKit
 import JxThemeManager
 
 public extension UITableViewController {
-    public func registerBasicCell() {
+    func registerBasicCell() {
         self.tableView.register(BasicCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.BasicCell.rawValue)
         self.tableView.register(UINib(nibName: "BasicCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.BasicCell.rawValue)
     }

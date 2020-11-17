@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JxContentTable'
-  s.version          = '0.1.0'
+  s.version          = '0.1.2'
   s.summary          = 'A Library to build up Content Table View Controllers withg a lot of different Cells.'
 
 # This description is used to generate tags and improve search results.
@@ -40,10 +40,10 @@ Pod::Spec.new do |s|
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit' #, 'MapKit'
   
-  s.dependency 'JxSwiftHelper'
+  s.dependency 'JxSwiftHelperForUiKit'
   s.dependency 'ScrollableGraphView'
   s.dependency 'JxThemeManager'
-
+  s.dependency 'PinchToZoomImageView'
   
   # s.dependency 'AFNetworking', '~> 2.3'
   
