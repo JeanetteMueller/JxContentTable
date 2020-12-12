@@ -10,7 +10,7 @@ import Foundation
 
 func log(_ items: Any...) {
     #if DEBUG
-    print(items)
+    print("MainThread \(Thread.isMainThread): \(items)")
     #endif
 }
 func log(_ items: Any..., terminator: String) {
