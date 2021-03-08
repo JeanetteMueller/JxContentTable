@@ -40,4 +40,17 @@ public extension DetailViewCell {
 
 public class TitleCell: DetailViewCell {
 
+    @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet weak var titleLeft: NSLayoutConstraint!
+    @IBOutlet weak var titleRight: NSLayoutConstraint!
+    
+    public override func updateConstraints() {
+        let theme = ThemeManager.currentTheme()
+        
+        titleLeft.constant = theme.contentInsetFromDisplayBorder
+        titleRight.constant = theme.contentInsetFromDisplayBorder
+        
+        super.updateConstraints()
+    }
 }

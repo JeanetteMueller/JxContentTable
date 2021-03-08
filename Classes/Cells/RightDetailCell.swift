@@ -20,7 +20,7 @@ public extension DetailViewCell {
 
     typealias RightDetailCellAction = (_ cell: RightDetailCell, _ indexpath: IndexPath) -> Void
 
-    class func RightDetailCell(withLeftText left: String, andRightText right: String?, andHeight height: Any = "auto", andAction action: RightDetailCellAction? = nil) -> ContentTableViewCellData {
+    class func RightDetailCell(withLeftText left: String, andRightText right: String?, andHeight height: Any = "auto", andTextColorLeft leftTextColor: UIColor? = nil, andTextColorRight rightTextColor: UIColor? = nil, isSelected selected: Bool = false, andAction action: RightDetailCellAction? = nil) -> ContentTableViewCellData {
 
         let theme = ThemeManager.currentTheme()
         
@@ -29,7 +29,12 @@ public extension DetailViewCell {
                     "text": left as Any,
                     "leftfont": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
                     "rightfont": UIFont(name: theme.fontRegular, size: theme.fontSizeContentLarge) as Any,
-                    "right": right as Any]
+                    "textColor": leftTextColor as Any,
+                    "textColorRight": rightTextColor as Any,
+                    "right": right as Any,
+                    "selected": selected as Any,
+                    "textFrameReduce": (UIScreen.main.bounds.size.width - (theme.contentInsetFromDisplayBorder * 2)) * 0.7
+        ]
 
         if action != nil {
             dict["action"] = action as Any
@@ -42,4 +47,17 @@ public class RightDetailCell: DetailViewCell {
 
     @IBOutlet public var leftText: UILabel!
     @IBOutlet public var rightText: UILabel!
+    
+    @IBOutlet weak var leftBorder: NSLayoutConstraint!
+    @IBOutlet weak var rightBorder: NSLayoutConstraint!
+    
+    public override func updateConstraints() {
+        
+        let theme = ThemeManager.currentTheme()
+        
+        leftBorder.constant = theme.contentInsetFromDisplayBorder
+        rightBorder.constant = theme.contentInsetFromDisplayBorder
+        
+        super.updateConstraints()
+    }
 }

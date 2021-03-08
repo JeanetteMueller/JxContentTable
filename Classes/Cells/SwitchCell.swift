@@ -25,10 +25,12 @@ public extension DetailViewCell {
         let theme = ThemeManager.currentTheme()
 
         var dict = ["cell": JxContentTableViewCell.SwitchCell,
-                    "height": 60 as Any,
+                    "height": "auto",
                     "text": title as Any,
                     "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "on": on as Any]
+                    "on": on as Any,
+                    "textFrameReduce": (theme.contentInsetFromDisplayBorder * 2) + 50
+        ]
 
         if action != nil {
             dict["action"] = action as Any

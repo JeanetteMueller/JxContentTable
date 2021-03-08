@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="RightDetailCell" id="5yE-20-S3Q" customClass="RightDetailCell" customModule="Podcat_2" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="RightDetailCell" id="5yE-20-S3Q" customClass="RightDetailCell" customModule="JxContentTable" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5yE-20-S3Q" id="fw3-jG-eYB">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i0W-VD-A8b">
-                        <rect key="frame" x="15" y="5" width="200" height="50"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i0W-VD-A8b">
+                        <rect key="frame" x="11" y="0.0" width="201" height="60"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iSO-bl-tnt">
-                        <rect key="frame" x="215" y="5" width="90" height="48"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iSO-bl-tnt">
+                        <rect key="frame" x="212" y="0.0" width="96" height="60"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="iSO-bl-tnt" secondAttribute="trailing" constant="12" id="DKq-XY-YPp"/>
+                    <constraint firstItem="iSO-bl-tnt" firstAttribute="width" secondItem="fw3-jG-eYB" secondAttribute="width" multiplier="0.3" id="RXN-eE-64i"/>
+                    <constraint firstItem="i0W-VD-A8b" firstAttribute="top" secondItem="fw3-jG-eYB" secondAttribute="top" id="TOb-w4-ogf"/>
+                    <constraint firstItem="iSO-bl-tnt" firstAttribute="leading" secondItem="i0W-VD-A8b" secondAttribute="trailing" id="VyH-UJ-Xei"/>
+                    <constraint firstItem="iSO-bl-tnt" firstAttribute="top" secondItem="fw3-jG-eYB" secondAttribute="top" id="nKX-n5-UEM"/>
+                    <constraint firstAttribute="bottom" secondItem="iSO-bl-tnt" secondAttribute="bottom" id="p7P-SV-CJA"/>
+                    <constraint firstAttribute="bottom" secondItem="i0W-VD-A8b" secondAttribute="bottom" id="sdD-m6-km3"/>
+                    <constraint firstItem="i0W-VD-A8b" firstAttribute="leading" secondItem="fw3-jG-eYB" secondAttribute="leading" constant="11" id="yIQ-Nn-YBC"/>
+                </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="leftBorder" destination="yIQ-Nn-YBC" id="AIQ-6J-XYu"/>
                 <outlet property="leftText" destination="i0W-VD-A8b" id="A2a-Y4-lVt"/>
+                <outlet property="rightBorder" destination="DKq-XY-YPp" id="we9-uO-93n"/>
                 <outlet property="rightText" destination="iSO-bl-tnt" id="xhI-Xo-ljK"/>
             </connections>
             <point key="canvasLocation" x="25" y="52"/>

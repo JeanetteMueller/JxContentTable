@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SegmentBarCell" rowHeight="160" id="NOG-Jn-6nd" customClass="SegmentBarCell" customModule="JxContentTable" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NOG-Jn-6nd" id="JHy-vA-9jG">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SsD-yh-Eqf">
+                        <rect key="frame" x="5" y="0.0" width="404" height="160"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q1U-fc-kJp">
+                                <rect key="frame" x="0.0" y="10" width="404" height="14"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="14" id="JCt-BD-W6u"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UUr-Ce-OU8">
+                                <rect key="frame" x="0.0" y="29" width="404" height="131"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="q1U-fc-kJp" firstAttribute="top" secondItem="SsD-yh-Eqf" secondAttribute="top" constant="10" id="BlE-JK-Fff"/>
+                            <constraint firstItem="UUr-Ce-OU8" firstAttribute="top" secondItem="q1U-fc-kJp" secondAttribute="bottom" constant="5" id="EzP-BC-XwX"/>
+                            <constraint firstAttribute="trailing" secondItem="UUr-Ce-OU8" secondAttribute="trailing" id="FIk-tS-Rbe"/>
+                            <constraint firstItem="q1U-fc-kJp" firstAttribute="leading" secondItem="SsD-yh-Eqf" secondAttribute="leading" id="KtV-sN-lci"/>
+                            <constraint firstAttribute="bottom" secondItem="UUr-Ce-OU8" secondAttribute="bottom" id="VPP-UK-nu2"/>
+                            <constraint firstItem="UUr-Ce-OU8" firstAttribute="leading" secondItem="SsD-yh-Eqf" secondAttribute="leading" id="jC9-Oq-lkj"/>
+                            <constraint firstAttribute="trailing" secondItem="q1U-fc-kJp" secondAttribute="trailing" id="uQI-NX-1tO"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="SsD-yh-Eqf" firstAttribute="top" secondItem="JHy-vA-9jG" secondAttribute="top" id="D3a-On-CFg"/>
+                    <constraint firstItem="SsD-yh-Eqf" firstAttribute="leading" secondItem="JHy-vA-9jG" secondAttribute="leading" constant="5" id="LCz-fm-MnO"/>
+                    <constraint firstAttribute="trailing" secondItem="SsD-yh-Eqf" secondAttribute="trailing" constant="5" id="dKb-0l-dzQ"/>
+                    <constraint firstAttribute="bottom" secondItem="SsD-yh-Eqf" secondAttribute="bottom" id="uz0-bt-wJi"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="bar" destination="q1U-fc-kJp" id="WQm-ry-P4i"/>
+                <outlet property="content" destination="SsD-yh-Eqf" id="s4z-ea-8lr"/>
+                <outlet property="left" destination="LCz-fm-MnO" id="wg2-zk-B7m"/>
+                <outlet property="legend" destination="UUr-Ce-OU8" id="uRb-mV-YWL"/>
+                <outlet property="right" destination="dKb-0l-dzQ" id="Ucn-b9-twD"/>
+            </connections>
+            <point key="canvasLocation" x="217.39130434782609" y="51.5625"/>
+        </tableViewCell>
+    </objects>
+</document>

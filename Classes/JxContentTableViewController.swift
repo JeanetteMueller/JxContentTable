@@ -36,6 +36,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         self.registerButtonCell()
         self.registerGraphCell()
         self.registerCaruselCell()
+        self.registerSegmentBarCell()
         
         //Header
         self.registerAllHeader()
@@ -109,9 +110,26 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             let dict = content[indexPath.section][indexPath.row]
             
             if let cellType = dict["cell"] as? JxContentTableViewCell {
-                if cellType == JxContentTableViewCell.BasicCell {
+                switch (cellType) {
+                case JxContentTableViewCell.BasicCell:
+                    
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? BasicCell {
                         cell.cellImageView.alpha = theme.imageAlpha
+                        
+                        cell.setNeedsUpdateConstraints()
+                        
+                        if let font = dict["font"] as? UIFont {
+                            cell.cellLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                        }else{
+                            cell.cellLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+                        }
+                        
+                        cell.cellLabel.lineBreakMode = .byWordWrapping
+
+                        cell.cellLabel.backgroundColor = UIColor.clear
+                        cell.cellLabel.adjustsFontForContentSizeCategory = true
+                        cell.cellLabel.minimumScaleFactor = 0.5
+                        
                         cell.cellLabel.text = dict["text"] as? String
                         cell.accessibilityLabel = dict["text"] as? String
                         
@@ -127,39 +145,35 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                             cell.cellLabel.textAlignment = textAlignment
                         }
                         
-                        if dict["action"] != nil {
-                            //                            "arrow_right"
-                            cell.accessoryType = .disclosureIndicator
-                            cell.accessoryView?.accessibilityLabel = dict["text"] as? String
+                        cell.accessoryType = .none
+                        
+                        if let isSelected = dict["selected"] as? Bool, isSelected == true {
+                            
+                            cell.accessoryType = .checkmark
+                            
+                        }else if dict["action"] != nil {
+                            if let hideDisclosureIndicator = dict["hideDisclosureIndicator"] as? Bool, hideDisclosureIndicator == true {
+                                cell.accessoryType = .none
+                            }else{
+                                cell.accessoryType = .disclosureIndicator
+                                cell.accessoryView?.accessibilityLabel = dict["text"] as? String
+                            }
                         } else {
                             cell.accessoryType = .none
                         }
                         
-                        if let font = dict["font"] as? UIFont {
-                            cell.cellLabel.font = font
-                        }
+                        
                         if let textColor = dict["textColor"] as? UIColor {
                             cell.cellLabel.textColor = textColor
                         } else {
                             cell.cellLabel.textColor = theme.titleTextColor
                         }
                         
-                        if let isSelected = dict["selected"] as? Bool {
-                            cell.accessoryType = .none
-                            if isSelected {
-                                cell.accessoryType = .checkmark
-                            }
-                        }
                         
-                        if let hideDisclosureIndicator = dict["hideDisclosureIndicator"] as? Bool, hideDisclosureIndicator == true {
-                            cell.accessoryType = .none
-                        }
-                        
-                        cell.setNeedsUpdateConstraints()
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.RightDetailCell {
+                case JxContentTableViewCell.RightDetailCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? RightDetailCell {
                         
                         cell.leftText.text = dict["text"] as? String
@@ -175,19 +189,37 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         }
                         
                         if let font = dict["leftfont"] as? UIFont {
-                            cell.leftText.font = font
+                            cell.leftText.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         
                         if let font = dict["rightfont"] as? UIFont {
-                            cell.rightText.font = font
+                            cell.rightText.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
-                        cell.leftText.textColor = theme.titleTextColor
-                        cell.rightText.textColor = theme.titleTextColor
+                        
+                        if let textColor = dict["textColor"] as? UIColor {
+                            cell.leftText.textColor = textColor
+                        } else {
+                            cell.leftText.textColor = theme.titleTextColor
+                        }
+                        
+                        if let textColor = dict["textColorRight"] as? UIColor {
+                            cell.rightText.textColor = textColor
+                        } else {
+                            cell.rightText.textColor = theme.titleTextColor
+                        }
+                        
+                        if let isSelected = dict["selected"] as? Bool {
+                            cell.accessoryType = .none
+                            if isSelected {
+                                cell.accessoryType = .checkmark
+                            }
+                        }
+                        
                         cell.setNeedsUpdateConstraints()
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.SubtitleCell {
+                case JxContentTableViewCell.SubtitleCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SubtitleCell {
                         
                         cell.textLabel?.text = dict["text"] as? String
@@ -210,11 +242,11 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         }
                         
                         if let font = dict["font"] as? UIFont {
-                            cell.textLabel?.font = font
+                            cell.textLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         
                         if let font = dict["subfont"] as? UIFont {
-                            cell.detailTextLabel?.font = font
+                            cell.detailTextLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         cell.textLabel?.textColor = theme.titleTextColor
                         cell.detailTextLabel?.textColor = theme.subtitleTextColor
@@ -222,13 +254,13 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.BubbleCell {
+                case JxContentTableViewCell.BubbleCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? BubbleCell {
                         
                         cell.titleLabel?.text = dict["text"] as? String
                         cell.accessibilityLabel = dict["text"] as? String
                         if let font = dict["font"] as? UIFont {
-                            cell.titleLabel?.font = font
+                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         
                         cell.setNeedsUpdateConstraints()
@@ -246,7 +278,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         }
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.LogoCell {
+                case JxContentTableViewCell.LogoCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? LogoCell {
                         cell.accessoryType = .none
                         
@@ -272,7 +304,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.SwitchCell {
+                case JxContentTableViewCell.SwitchCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SwitchCell {
                         cell.accessoryType = .none
                         cell.titleLabel.text = dict["text"] as? String
@@ -281,14 +313,14 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.switchButton.isOn = dict["on"] as? Bool ?? false
                         #endif
                         if let font = dict["font"] as? UIFont {
-                            cell.titleLabel.font = font
+                            cell.titleLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         cell.titleLabel.textColor = theme.titleTextColor
                         cell.setNeedsUpdateConstraints()
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.InputCell {
+                case JxContentTableViewCell.InputCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? InputCell {
                         cell.accessoryType = .none
                         cell.inputTextField.text = dict["text"] as? String
@@ -309,7 +341,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.UrlInputCell {
+                case JxContentTableViewCell.UrlInputCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? UrlInputCell {
                         cell.accessoryType = .none
                         cell.urlTextField.text = dict["text"] as? String
@@ -331,7 +363,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.ProgressCell {
+                case JxContentTableViewCell.ProgressCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? ProgressCell {
                         cell.updateProgress(withPercent: dict["value"] as? Float ?? 0.0, orProgress: dict["progress"] as? Progress)
                         cell.accessoryType = .none
@@ -340,7 +372,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                             cell.textValue = text
                         }
                         if let font = dict["font"] as? UIFont {
-                            cell.titleLabel.font = font
+                            cell.titleLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         if let download = dict["download"] as? String {
                             cell.downloadUrlString = download
@@ -350,13 +382,13 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.StepperCell {
+                case JxContentTableViewCell.StepperCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? StepperCell {
                         cell.accessoryType = .none
                         cell.titleLabel.text = dict["text"] as? String
                         cell.accessibilityLabel = dict["text"] as? String
                         if let font = dict["font"] as? UIFont {
-                            cell.titleLabel?.font = font
+                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         cell.defaultValue = dict["value"] as? Double ?? 0
                         cell.min = dict["min"] as? Double ?? 0
@@ -371,13 +403,13 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.TitleCell {
+                case JxContentTableViewCell.TitleCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? TitleCell {
                         
-                        cell.textLabel?.text = dict["text"] as? String
+                        cell.titleLabel?.text = dict["text"] as? String
                         cell.accessibilityLabel = dict["text"] as? String
                         if let font = dict["font"] as? UIFont {
-                            cell.textLabel?.font = font
+                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
                         }
                         if dict["action"] != nil {
                             cell.accessoryType = .disclosureIndicator
@@ -385,13 +417,13 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         } else {
                             cell.accessoryType = .none
                         }
-                        cell.textLabel?.textColor = theme.titleTextColor
+                        cell.titleLabel?.textColor = theme.titleTextColor
                         cell.setNeedsUpdateConstraints()
                         cell.updateAppearance()
                         return cell
                         
                     }
-                } else if cellType == JxContentTableViewCell.ButtonCell {
+                case JxContentTableViewCell.ButtonCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? ButtonCell {
                         cell.accessoryType = .none
                         cell.updateWithTitle(dict["buttonTitle"] as? String)
@@ -400,7 +432,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.GraphCell {
+                case JxContentTableViewCell.GraphCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? GraphCell {
                         cell.accessoryType = .none
                         
@@ -411,7 +443,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
-                } else if cellType == JxContentTableViewCell.CaruselCell {
+                case JxContentTableViewCell.CaruselCell:
                     if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? CaruselCell {
                         cell.accessoryType = .none
                         cell.delegate = self
@@ -422,6 +454,42 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.updateAppearance()
                         return cell
                     }
+                case .EpisodeCell:
+                    break
+                case .EpisodeCollectionCell:
+                    break
+                case .GroupCell:
+                    break
+                case .PodcastTableViewCell:
+                    break
+                case .InfoCell:
+                    break
+                case .PodcastCell:
+                    break
+                case .InAppPurchaseCell:
+                    break
+                case .InAppPurchase3xCell:
+                    break
+                case .SegmentBarCell:
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SegmentBarCell {
+                        cell.accessoryType = .none
+                        
+                        if let values = dict["values"] as? [Float] {
+                            cell.values = values
+                        }
+                        if let titles = dict["titles"] as? [String] {
+                            cell.titles = titles
+                        }
+                        if let colors = dict["colors"] as? [UIColor] {
+                            cell.colors = colors
+                        }
+                        
+                        cell.setNeedsUpdateConstraints()
+                        cell.updateAppearance()
+                        return cell
+                    }
+                case .BookmarkCell:
+                    break
                 }
             }
         }
@@ -432,49 +500,88 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     }
     
     open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        let theme = ThemeManager.currentTheme()
+        
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
             
             let dict = content[indexPath.section][indexPath.row]
             
-            var height: Any = "auto"
+            var minHeight: CGFloat = theme.tableViewCellDefaultHeight
             
-            if let h = dict["dynamicHeight"] {
-                height = h
-            } else if let h = dict["height"] {
-                height = h
+            if let h = dict["height"] as? Int {
+                minHeight = CGFloat(h)
+            } else if let h = dict["height"] as? Float {
+                minHeight = CGFloat(h)
+            } else if let h = dict["height"] as? CGFloat {
+                minHeight = h
             }
             
-            if height is String && (height as? String ?? "auto").isEqual("auto") {
-                
-                var font = UIFont.systemFont(ofSize: 17)
+            
+            
+            var font = UIFont.preferredFont(forTextStyle: .body)
+            
+            var newHeight:CGFloat = 0
+            
+            if let text = dict["text"] as? String {
                 
                 if let customFont = dict["font"] as? UIFont {
-                    font = customFont
+                    let theme = ThemeManager.currentTheme()
+                    if let f = theme.getFont(name: customFont.familyName, size: customFont.pointSize) {
+                        font = f
+                    }
                 }
                 
-                let attributedText = NSAttributedString(string: (dict["text"] as? String ?? ""), attributes: [NSAttributedString.Key.font: font as Any])
+                let attributedText = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: font as Any])
                 
-                let rect = attributedText.boundingRect(with: CGSize(width: self.view.frame.size.width-32,
+                var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
+                
+                if let textFrameReduce = dict["textFrameReduce"] as? CGFloat {
+                    width = self.view.frame.size.width - textFrameReduce
+                }
+                
+                let rect = attributedText.boundingRect(with: CGSize(width: width,
                                                                     height: CGFloat.greatestFiniteMagnitude),
                                                        options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                                        context: nil)
                 
-                let newHeight = ceilf(Float(rect.size.height)) + 12.0
+                newHeight += CGFloat(ceilf(Float(rect.size.height)) + 12.0)
                 
-                if newHeight < 60 {
-                    return 60
-                }
-                return CGFloat(newHeight)
-                
-            } else if let h = height as? Int {
-                return CGFloat(h)
-            } else if let h = height as? Float {
-                return CGFloat(h)
-            } else if let h = height as? CGFloat {
-                return h
             }
+            if let text = dict["sub"] as? String {
+                
+                if let customFont = dict["subfont"] as? UIFont {
+                    let theme = ThemeManager.currentTheme()
+                    if let f = theme.getFont(name: customFont.familyName, size: customFont.pointSize) {
+                        font = f
+                    }
+                }
+                
+                let attributedText = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: font as Any])
+                
+                var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
+                
+                if let textFrameReduce = dict["textFrameReduce"] as? CGFloat {
+                    width = self.view.frame.size.width - textFrameReduce
+                }
+                
+                let rect = attributedText.boundingRect(with: CGSize(width: width,
+                                                                    height: CGFloat.greatestFiniteMagnitude),
+                                                       options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                                                       context: nil)
+                
+                newHeight += CGFloat(ceilf(Float(rect.size.height)) + 16.0)
+                
+            }
+            
+            if newHeight < minHeight {
+                newHeight = minHeight
+            }
+            
+            
+            return newHeight
         }
-        return 44
+        return theme.tableViewCellDefaultHeight
     }
     open override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let c = cell as? DetailViewCell {
@@ -517,7 +624,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     }
     
     open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
+        
         return nil
     }
     open func updateHeader(_ headerView: BasicHeaderView, in section: Int) {
@@ -636,6 +743,8 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         break
                     case JxContentTableViewCell.CaruselCell:
                         break
+                    case JxContentTableViewCell.SegmentBarCell:
+                        break
                     }
                 }
             }
@@ -701,3 +810,4 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         
     }
 }
+

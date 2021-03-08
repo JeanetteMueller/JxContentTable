@@ -34,6 +34,7 @@ public enum JxContentTableViewCell: String {
     case ButtonCell = "ButtonCell"
     case GraphCell = "GraphCell"
     case CaruselCell = "CaruselCell"
+    case SegmentBarCell = "SegmentBarCell"
     
     case BookmarkCell = "BookmarkCell"
     

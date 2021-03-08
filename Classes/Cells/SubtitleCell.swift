@@ -36,7 +36,9 @@ public extension DetailViewCell {
                     "font": (titleFont ?? UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
                     "sub": sub as Any,
                     "subfont": (subTitleFont ?? UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
-                    "image": image as Any]
+                    "image": image as Any,
+                    "textFrameReduce": 16.0 * 2 + (action == nil ? 0 : 30)
+        ]
 
         if action != nil {
             dict["action"] = action as Any

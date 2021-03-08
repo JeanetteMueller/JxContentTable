@@ -28,12 +28,13 @@ public extension DetailViewCell {
         var dict = ["cell": JxContentTableViewCell.StepperCell,
                     "text": title as Any,
                     "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "height": 60 as Any,
+                    "height": "auto",
                     "value": value as Any,
                     "step": step as Any,
                     "min": min as Any,
                     "max": max as Any,
-                    "displayFormat": format
+                    "displayFormat": format,
+                    "textFrameReduce": (theme.contentInsetFromDisplayBorder * 2) + (30 * 2) + 100
         ]
 
         if action != nil {
@@ -116,6 +117,7 @@ public class StepperCell: DetailViewCell {
         downButtonContainer?.backgroundColor = UIColor.clear
 
         valueLabel.backgroundColor = UIColor.clear
+        valueLabel.font = theme.getFont(name: theme.fontMedium, size: theme.fontSizeContentLarge)
 
         upButtonBackground?.layer.cornerRadius = 12
         downButtonBackground?.layer.cornerRadius = 12

@@ -103,5 +103,6 @@ public class LogoCell: DetailViewCell {
                                      y: -extra + padding,
                                      width: self.frame.size.height + extra - (padding * 2),
                                      height: self.frame.size.height + extra - (padding * 2))
+        
     }
 }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JxContentTable'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'A Library to build up Content Table View Controllers withg a lot of different Cells.'
 
 # This description is used to generate tags and improve search results.
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   s.swift_versions = ['5.0', '5.1', '5.2', '5.3']
   s.source_files = 'Classes/**/*.swift', 'Classes/*.swift'
   
-  s.resources = "JxContentTable/*.xib"
+  s.resources = "JxContentTable/**/*.xib", "JxContentTable/*.xib"
   s.resource_bundles = {
     'JxContentTable' => ['Classes/**/*.xib', 'Classes/*.xib']
   }

@@ -23,6 +23,7 @@ public extension DetailViewCell {
     class func BasicCell(withTitle title: String?,
                          andHeight height: Any = "auto",
                          andImage image: UIImage? = nil,
+                         isSelected selected: Bool = false,
                          withTextAlign align: NSTextAlignment = .left,
                          andTextColor textColor: UIColor? = nil,
                          andHideDisclosureIndicator hideDisclosureIndicator: Bool = false,
@@ -33,6 +34,7 @@ public extension DetailViewCell {
         var dict = ["cell": JxContentTableViewCell.BasicCell,
                     "text": title as Any,
                     "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
+                    "selected": selected as Any,
                     "height": height,
                     "align": align as Any,
                     "textColor": textColor as Any,
@@ -56,25 +58,6 @@ public extension DetailViewCell {
                     "height": "auto" as Any,
                     "align": NSTextAlignment.left as Any
         ]
-        return dict
-    }
-
-    class func BasicSelectedCell(withTitle title: String?, andHeight height: Any = "auto", isSelected selected: Bool, andTextColor textColor: UIColor? = nil, andAction action: BasicCellAction? = nil) -> ContentTableViewCellData {
-
-        let theme = ThemeManager.currentTheme()
-        
-        var dict = ["cell": JxContentTableViewCell.BasicCell,
-                    "height": height,
-                    "text": title as Any,
-                    "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "selected": selected as Any,
-                    "align": NSTextAlignment.left as Any,
-                    "textColor": textColor as Any
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
         return dict
     }
 }
