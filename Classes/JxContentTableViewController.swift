@@ -15,6 +15,16 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     public var headlinesDetail = [String]()
     public var content = [[ContentTableViewCellData]]()
     
+    open func contentTableViewCellData(for indexPath:IndexPath) -> ContentTableViewCellData? {
+        if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
+            
+            let dict = content[indexPath.section][indexPath.row]
+            
+            return dict
+        }
+        return nil
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
