@@ -211,7 +211,7 @@ public class StepperCell: DetailViewCell {
     }
 }
 
-public protocol StepperCellDelegate: class {
+public protocol StepperCellDelegate: AnyObject {
     func stepperCell(cell: StepperCell, changedValue value: Double)
 
 }

@@ -106,7 +106,7 @@ public class CaruselCell: DetailViewCell, UICollectionViewDelegate, UICollection
 
     }
 }
-public protocol CaruselDelegate: class {
+public protocol CaruselDelegate: AnyObject {
     func didSelectItem(_ item: CaruselItem)
 }
 public protocol CaruselDataSource {
