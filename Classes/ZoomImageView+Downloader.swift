@@ -10,8 +10,8 @@ import ZoomImageView
 import JxSwiftHelper
 import JxSwiftHelperForUiKit
 
-public extension ZoomImageView {
-    func loadImageFromHttpPath(path: String, fallbackImage: UIImage, contentMode: UIView.ContentMode, withCustomSize customSize: CGSize? = nil) {
+extension ZoomImageView {
+    public func loadImageFromHttpPath(path: String, fallbackImage: UIImage, contentMode: UIView.ContentMode, withCustomSize customSize: CGSize? = nil) {
         
         var size = self.frame.size
         
