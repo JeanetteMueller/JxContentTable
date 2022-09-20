@@ -10,7 +10,7 @@ import UIKit
 import JxThemeManager
 import JxSwiftHelper
 import JxSwiftHelperForUiKit
-import PinchToZoomImageView
+import ZoomImageView
 
 public extension UITableViewController {
     func registerLogoCell() {
@@ -59,7 +59,7 @@ public extension DetailViewCell {
 }
 
 public class LogoCell: DetailViewCell {
-    @IBOutlet public weak var logoView: PinchToZoomImageView!
+    @IBOutlet public weak var logoView: ZoomImageView!
 
     private var logo: String?
 

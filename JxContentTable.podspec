@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   s.dependency 'JxSwiftHelperForUiKit'
   s.dependency 'ScrollableGraphView'
   s.dependency 'JxThemeManager'
-  s.dependency 'PinchToZoomImageView'
+  s.dependency 'ZoomImageView'
   
   # s.dependency 'AFNetworking', '~> 2.3'
   
