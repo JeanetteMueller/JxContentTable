@@ -605,7 +605,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     }
     open func seactionHeadlineText(forSection section: Int) -> String? {
         if headlines.count > section {
-            
             let text = headlines[section]
             if !text.isEmpty {
                 return text.replacingOccurrences(of: " ", with: "_")

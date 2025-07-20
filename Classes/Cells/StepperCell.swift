@@ -27,7 +27,7 @@ public extension DetailViewCell {
         
         var dict = ["cell": JxContentTableViewCell.StepperCell,
                     "text": title as Any,
-                    "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
+                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
                     "height": "auto",
                     "value": value as Any,
                     "step": step as Any,
@@ -127,8 +127,8 @@ public class StepperCell: DetailViewCell {
         upButton.setTitleColor(UIColor.white, for: .normal)
         downButton.setTitleColor(UIColor.white, for: .normal)
 
-        upButton.titleLabel?.font = UIFont(name: theme.fontMedium, size: 18)
-        downButton.titleLabel?.font = UIFont(name: theme.fontMedium, size: 18)
+        upButton.titleLabel?.font = theme.getFont(name: theme.fontMedium, size: 18)
+        downButton.titleLabel?.font = theme.getFont(name: theme.fontMedium, size: 18)
 
         upButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 4, right: 0)
         downButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 4, right: 0)

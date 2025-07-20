@@ -33,9 +33,9 @@ public extension DetailViewCell {
         var dict = ["cell": JxContentTableViewCell.SubtitleCell,
                     "height": height,
                     "text": title as Any,
-                    "font": (titleFont ?? UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
+                    "font": (titleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
                     "sub": sub as Any,
-                    "subfont": (subTitleFont ?? UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
+                    "subfont": (subTitleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
                     "image": image as Any,
                     "textFrameReduce": 16.0 * 2 + (action == nil ? 0 : 30)
         ]

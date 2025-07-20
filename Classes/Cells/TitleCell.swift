@@ -28,7 +28,7 @@ public extension DetailViewCell {
         var dict = ["cell": JxContentTableViewCell.TitleCell,
                     "height": height,
                     "text": title as Any,
-                    "font": UIFont(name: theme.fontLight, size: theme.fontSizeLargeTitle) as Any,
+                    "font": theme.getFont(name: theme.fontLight, size: theme.fontSizeLargeTitle) as Any,
                     "align": align as Any]
 
         if action != nil {

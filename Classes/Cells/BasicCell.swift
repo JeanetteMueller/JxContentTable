@@ -33,7 +33,7 @@ public extension DetailViewCell {
         
         var dict = ["cell": JxContentTableViewCell.BasicCell,
                     "text": title as Any,
-                    "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
+                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
                     "selected": selected as Any,
                     "height": height,
                     "align": align as Any,
@@ -54,7 +54,7 @@ public extension DetailViewCell {
         
         let dict = ["cell": JxContentTableViewCell.BasicCell,
                     "text": title as Any,
-                    "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium) as Any,
+                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium) as Any,
                     "height": "auto" as Any,
                     "align": NSTextAlignment.left as Any
         ]

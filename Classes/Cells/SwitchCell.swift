@@ -27,7 +27,7 @@ public extension DetailViewCell {
         var dict = ["cell": JxContentTableViewCell.SwitchCell,
                     "height": "auto",
                     "text": title as Any,
-                    "font": UIFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
+                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
                     "on": on as Any,
                     "textFrameReduce": (theme.contentInsetFromDisplayBorder * 2) + 50
         ]

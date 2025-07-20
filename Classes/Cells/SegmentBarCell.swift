@@ -80,14 +80,14 @@ public class SegmentBarCell: DetailViewCell {
                 legendText.append(NSAttributedString(string: ", ",
                                                      attributes: [
                                                         NSAttributedString.Key.foregroundColor: theme.titleTextColor,
-                                                        NSAttributedString.Key.font: UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium) as Any
+                                                        NSAttributedString.Key.font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
                                                      ]))
             }
             
             legendText.append(NSAttributedString(string: t,
                                                  attributes: [
                                                     NSAttributedString.Key.foregroundColor: self.colors[index],
-                                                    NSAttributedString.Key.font: UIFont(name: theme.fontRegular, size: theme.fontSizeContentMedium) as Any
+                                                    NSAttributedString.Key.font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
                                                  ]))
             
             
