@@ -10,26 +10,31 @@ import UIKit
 
 public extension UITableViewController {
     func registerUrlInputCell() {
-        self.tableView.register(UrlInputCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.UrlInputCell.rawValue)
-        self.tableView.register(UINib(nibName: "UrlInputCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.UrlInputCell.rawValue)
+        self.tableView.register(UrlInputCell.classForCoder(), forCellReuseIdentifier: "UrlInputCell")
+        self.tableView.register(UINib(nibName: "UrlInputCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "UrlInputCell")
     }
 }
 
 public extension DetailViewCell {
     typealias UrlInputCellAction = (_ cell: UrlInputCell, _ indexpath: IndexPath, _ value: URL, _ submit: Bool) -> Void
 
-    class func UrlInputCell(withValue value: String?, andPlaceholder placeholder: String?, andReturnKey returnKey: UIReturnKeyType, andAction action: UrlInputCellAction? = nil) -> ContentTableViewCellData {
+    struct UrlInputCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var text: String?
+        var placeholder: String?
+        var returnKey: UIReturnKeyType = .default
+        var action: UrlInputCellAction?
+    }
+    
+    class func UrlInputCell(withValue value: String?, andPlaceholder placeholder: String?, andReturnKey returnKey: UIReturnKeyType, andAction action: UrlInputCellAction? = nil) -> JxContentTableViewCell {
 
-        var dict = ["cell": JxContentTableViewCell.UrlInputCell,
-                    "height": 60 as Any,
-                    "text": value as Any,
-                    "placeholder": placeholder as Any,
-                    "returnKey": returnKey as Any]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = UrlInputCellData(height: 60,
+                                    text: value,
+                                    placeholder: placeholder,
+                                    returnKey: returnKey,
+                                    action: action)
+        
+        return JxContentTableViewCell.UrlInputCell(data)
     }
 }
 

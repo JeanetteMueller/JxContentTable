@@ -10,37 +10,35 @@ import UIKit
 
 public extension UITableViewController {
     func registerProgressCell() {
-        self.tableView.register(ProgressCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.ProgressCell.rawValue)
-        self.tableView.register(UINib(nibName: "ProgressCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.ProgressCell.rawValue)
+        self.tableView.register(ProgressCell.classForCoder(), forCellReuseIdentifier: "ProgressCell")
+        self.tableView.register(UINib(nibName: "ProgressCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "ProgressCell")
     }
 }
 public extension DetailViewCell {
 
     typealias ProgressCellAction = (_ cell: ProgressCell, _ indexpath: IndexPath, _ value: Float) -> Void
 
-    class func ProgressCell(withTitle title: String?, withValue value: Float, andAction action: ProgressCellAction? = nil) -> ContentTableViewCellData {
-        var dict = ["cell": JxContentTableViewCell.ProgressCell,
-                    "text": title as Any,
-                    "value": value as Any
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+    struct ProgressCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var title: String?
+        var font: UIFont?
+        var value: Float
+        var progress: Progress?
+        var urlString: String?
+        var action: ProgressCellAction?
     }
-    class func ProgressCell(withTitle title: String?, withValue value: Float = 0, withProgress progress: Progress? = nil, withDownload urlString: String, andAction action: ProgressCellAction? = nil) -> ContentTableViewCellData {
-        var dict = ["cell": JxContentTableViewCell.ProgressCell,
-                    "text": title as Any,
-                    "value": value as Any,
-                    "progress": progress as Any,
-                    "download": urlString
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+    
+    class func ProgressCell(withTitle title: String?, withValue value: Float, andAction action: ProgressCellAction? = nil) -> JxContentTableViewCell {
+        
+        let data = ProgressCellData(title: title, value: value, action: action)
+        
+        return JxContentTableViewCell.ProgressCell(data)
+    }
+    class func ProgressCell(withTitle title: String?, withValue value: Float = 0, withProgress progress: Progress? = nil, withDownload urlString: String, andAction action: ProgressCellAction? = nil) -> JxContentTableViewCell {
+        
+        let data = ProgressCellData(title: title, value: value, progress: progress, urlString: urlString, action: action)
+        
+        return JxContentTableViewCell.ProgressCell(data)
     }
 
 }

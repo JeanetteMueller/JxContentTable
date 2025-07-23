@@ -27,9 +27,9 @@ extension JxContentTableViewController: UrlInputCellDelegate {
 
                         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
 
-                            let dict = content[indexPath.section][indexPath.row]
+                            let cellData = content[indexPath.section][indexPath.row]
 
-                            if let action = dict["action"] as? DetailViewCell.UrlInputCellAction {
+                            if let action = cellData.getAction() as? DetailViewCell.UrlInputCellAction {
 
                                 action(cell, indexPath, url, true)
                             }
@@ -61,9 +61,9 @@ extension JxContentTableViewController: UrlInputCellDelegate {
 
                         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
 
-                            let dict = content[indexPath.section][indexPath.row]
+                            let cellData = content[indexPath.section][indexPath.row]
 
-                            if let action = dict["action"] as? DetailViewCell.UrlInputCellAction {
+                            if let action = cellData.getAction() as? DetailViewCell.UrlInputCellAction {
                                 action(cell, indexPath, url, false)
                             }
                         }

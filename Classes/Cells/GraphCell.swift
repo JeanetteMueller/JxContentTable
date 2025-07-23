@@ -14,8 +14,8 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerGraphCell() {
-        self.tableView.register(GraphCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.GraphCell.rawValue)
-        self.tableView.register(UINib(nibName: "GraphCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.GraphCell.rawValue)
+        self.tableView.register(GraphCell.classForCoder(), forCellReuseIdentifier: "GraphCell")
+        self.tableView.register(UINib(nibName: "GraphCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "GraphCell")
     }
 }
 
@@ -24,20 +24,21 @@ public extension DetailViewCell {
     enum GraphCellDirection {
         case leftToRight, rightToLeft
     }
+    
+    struct GraphCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var data: [Double]
+        var labels: [String]
+        var maxRange: Double
+        var unit: String?
+        var direction: GraphCellDirection
+    }
 
-    class func GraphCell(withData data: [Double], andLabels labels: [String], andMaxRange maxRange: Double, unit unitString: String? = nil, direction displayDirection: GraphCellDirection = .leftToRight, andHeight height: CGFloat) -> ContentTableViewCellData {
-        var dict = ["cell": JxContentTableViewCell.GraphCell,
-                    "height": height,
-                    "data": data as Any,
-                    "labels": labels as Any,
-                    "maxRange": maxRange as Any,
-                    "direction": displayDirection]
+    class func GraphCell(withData data: [Double], andLabels labels: [String], andMaxRange maxRange: Double, unit unitString: String? = nil, direction displayDirection: GraphCellDirection = .leftToRight, andHeight height: CGFloat) -> JxContentTableViewCell {
+        
+        let data = GraphCellData(height: height, data: data, labels: labels, maxRange: maxRange, unit: unitString, direction: displayDirection)
 
-        if let unit = unitString {
-            dict["unit"] = unit
-        }
-
-        return dict
+        return JxContentTableViewCell.GraphCell(data)
     }
 }
 
@@ -54,7 +55,7 @@ public class GraphCell: DetailViewCell {
     var maxRange: Double = 1
     var unit: String?
 
-    func update(withData data: [Double], andLabels labels: [String], andMaxRange maxRange: Double, unit unitString: String? = nil, direction displayDirection: GraphCellDirection = .leftToRight, andHeight height: CGFloat) {
+    func update(withData data: [Double], andLabels labels: [String], andMaxRange maxRange: Double, unit unitString: String? = nil, direction displayDirection: GraphCellDirection = .leftToRight) {
 
         self.data = data
         self.labels = labels

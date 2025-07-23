@@ -13,14 +13,14 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     
     public var headlines = [String]()
     public var headlinesDetail = [String]()
-    public var content = [[ContentTableViewCellData]]()
+    public var content = [[JxContentTableViewCell]]()
     
-    open func contentTableViewCellData(for indexPath:IndexPath) -> ContentTableViewCellData? {
+    open func contentTableViewCellData(for indexPath:IndexPath) -> JxContentTableViewCell? {
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
             
-            let dict = content[indexPath.section][indexPath.row]
+            let data = content[indexPath.section][indexPath.row]
             
-            return dict
+            return data
         }
         return nil
     }
@@ -74,9 +74,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        #if os(OSX) || os(iOS)
+#if os(OSX) || os(iOS)
         self.tableView.separatorStyle = .none
-        #endif
+#endif
         
         self.prepareContent()
         
@@ -117,391 +117,371 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
             
-            let dict = content[indexPath.section][indexPath.row]
+            let data = content[indexPath.section][indexPath.row]
             
-            if let cellType = dict["cell"] as? JxContentTableViewCell {
-                switch (cellType) {
-                case JxContentTableViewCell.BasicCell:
+            switch data {
+            case let JxContentTableViewCell.BasicCell(config):
+                
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? BasicCell {
+                    cell.cellImageView.alpha = theme.imageAlpha
                     
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? BasicCell {
-                        cell.cellImageView.alpha = theme.imageAlpha
+                    cell.setNeedsUpdateConstraints()
+                    
+                    if let font = config.font {
+                        cell.cellLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }else{
+                        cell.cellLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+                    }
+                    
+                    cell.cellLabel.lineBreakMode = .byWordWrapping
+                    
+                    cell.cellLabel.backgroundColor = UIColor.clear
+                    cell.cellLabel.adjustsFontForContentSizeCategory = true
+                    cell.cellLabel.minimumScaleFactor = 0.5
+                    
+                    cell.cellLabel.text = config.title
+                    cell.accessibilityLabel = config.title
+                    
+                    if let image = config.image {
+                        cell.cellImageView.image = image
                         
-                        cell.setNeedsUpdateConstraints()
+                        cell.cellImageView.accessibilityIgnoresInvertColors = true
                         
-                        if let font = dict["font"] as? UIFont {
-                            cell.cellLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    } else {
+                        cell.cellImageView.image = nil
+                    }
+                    cell.cellLabel.textAlignment = config.align
+                    
+                    
+                    cell.accessoryType = .none
+                    
+                    if config.isSelected == true {
+                        
+                        cell.accessoryType = .checkmark
+                        
+                    }else if config.action != nil {
+                        if config.hideDisclosureIndicator == true {
+                            cell.accessoryType = .none
                         }else{
-                            cell.cellLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-                        }
-                        
-                        cell.cellLabel.lineBreakMode = .byWordWrapping
-
-                        cell.cellLabel.backgroundColor = UIColor.clear
-                        cell.cellLabel.adjustsFontForContentSizeCategory = true
-                        cell.cellLabel.minimumScaleFactor = 0.5
-                        
-                        cell.cellLabel.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        
-                        if let image = dict["image"] {
-                            cell.cellImageView.image = image as? UIImage
-                            
-                            cell.cellImageView.accessibilityIgnoresInvertColors = true
-                            
-                        } else {
-                            cell.cellImageView.image = nil
-                        }
-                        if let textAlignment = dict["align"] as? NSTextAlignment {
-                            cell.cellLabel.textAlignment = textAlignment
-                        }
-                        
-                        cell.accessoryType = .none
-                        
-                        if let isSelected = dict["selected"] as? Bool, isSelected == true {
-                            
-                            cell.accessoryType = .checkmark
-                            
-                        }else if dict["action"] != nil {
-                            if let hideDisclosureIndicator = dict["hideDisclosureIndicator"] as? Bool, hideDisclosureIndicator == true {
-                                cell.accessoryType = .none
-                            }else{
-                                cell.accessoryType = .disclosureIndicator
-                                cell.accessoryView?.accessibilityLabel = dict["text"] as? String
-                            }
-                        } else {
-                            cell.accessoryType = .none
-                        }
-                        
-                        
-                        if let textColor = dict["textColor"] as? UIColor {
-                            cell.cellLabel.textColor = textColor
-                        } else {
-                            cell.cellLabel.textColor = theme.titleTextColor
-                        }
-                        
-                        
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case JxContentTableViewCell.RightDetailCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? RightDetailCell {
-                        
-                        cell.leftText.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        
-                        cell.rightText.text = dict["right"] as? String
-                        
-                        if dict["action"] != nil {
                             cell.accessoryType = .disclosureIndicator
-                            cell.accessoryView?.accessibilityLabel = dict["text"] as? String
-                        } else {
-                            cell.accessoryType = .none
+                            cell.accessoryView?.accessibilityLabel = config.title
                         }
-                        
-                        if let font = dict["leftfont"] as? UIFont {
-                            cell.leftText.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        
-                        if let font = dict["rightfont"] as? UIFont {
-                            cell.rightText.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        
-                        if let textColor = dict["textColor"] as? UIColor {
-                            cell.leftText.textColor = textColor
-                        } else {
-                            cell.leftText.textColor = theme.titleTextColor
-                        }
-                        
-                        if let textColor = dict["textColorRight"] as? UIColor {
-                            cell.rightText.textColor = textColor
-                        } else {
-                            cell.rightText.textColor = theme.titleTextColor
-                        }
-                        
-                        if let isSelected = dict["selected"] as? Bool {
-                            cell.accessoryType = .none
-                            if isSelected {
-                                cell.accessoryType = .checkmark
-                            }
-                        }
-                        
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case JxContentTableViewCell.SubtitleCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SubtitleCell {
-                        
-                        cell.textLabel?.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        cell.detailTextLabel?.text = dict["sub"] as? String
-                        
-                        cell.imageView?.alpha = theme.imageAlpha
-                        
-                        if let image = dict["image"] {
-                            cell.imageView?.image = image as? UIImage
-                            
-                            cell.imageView?.accessibilityIgnoresInvertColors = true
-                        }
-                        
-                        if dict["action"] != nil {
-                            cell.accessoryType = .disclosureIndicator
-                            cell.accessoryView?.accessibilityLabel = dict["text"] as? String
-                        } else {
-                            cell.accessoryType = .none
-                        }
-                        
-                        if let font = dict["font"] as? UIFont {
-                            cell.textLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        
-                        if let font = dict["subfont"] as? UIFont {
-                            cell.detailTextLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        cell.textLabel?.textColor = theme.titleTextColor
-                        cell.detailTextLabel?.textColor = theme.subtitleTextColor
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case JxContentTableViewCell.BubbleCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? BubbleCell {
-                        
-                        cell.titleLabel?.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        if let font = dict["font"] as? UIFont {
-                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        
-                        if let bubbleView = cell.bubbleView {
-                            
-                            let bubblePadding:CGFloat = 8
-                            
-                            if let height = dict["height"] as? Int {
-                                bubbleView.layer.cornerRadius = (CGFloat(height) - bubblePadding*2)/2
-                            } else if let height = dict["height"] as? CGFloat {
-                                bubbleView.layer.cornerRadius = (height - bubblePadding*2)/2
-                            }
-                        }
-                        return cell
-                    }
-                case JxContentTableViewCell.LogoCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? LogoCell {
+                    } else {
                         cell.accessoryType = .none
-                        
-                        cell.logoView.alpha = theme.imageAlpha
-                        
-                        cell.logoView.accessibilityIgnoresInvertColors = true
-                        
-                        if let logoPath = dict["logo"] as? String {
-                            cell.logoView.image = theme.fallbackImage
-                            cell.loadLogo(logoPath: logoPath)
-                        } else if let imageName = dict["imageName"] as? String {
-                            cell.logoView.image = UIImage(named: imageName)
-                        }
-                        
-                        if dict["action"] != nil {
-                            cell.accessoryType = .disclosureIndicator
-                            cell.accessoryView?.accessibilityLabel = "Change Logo"
-                        } else {
-                            cell.accessoryType = .none
-                        }
-                        
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.SwitchCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SwitchCell {
+                    
+                    
+                    if let textColor = config.textColor {
+                        cell.cellLabel.textColor = textColor
+                    } else {
+                        cell.cellLabel.textColor = theme.titleTextColor
+                    }
+                    
+                    
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.RightDetailCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? RightDetailCell {
+                    
+                    cell.leftText.text = config.left
+                    cell.accessibilityLabel = config.left
+                    
+                    cell.rightText.text = config.right
+                    
+                    if config.action != nil {
+                        cell.accessoryType = .disclosureIndicator
+                        cell.accessoryView?.accessibilityLabel = config.left
+                    } else {
                         cell.accessoryType = .none
-                        cell.titleLabel.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        #if os(iOS)
-                        cell.switchButton.isOn = dict["on"] as? Bool ?? false
-                        #endif
-                        if let font = dict["font"] as? UIFont {
-                            cell.titleLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        cell.titleLabel.textColor = theme.titleTextColor
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.InputCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? InputCell {
+                    
+                    if let font = config.leftFont  {
+                        cell.leftText.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    
+                    if let font = config.rightFont  {
+                        cell.rightText.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    
+                    if let textColor = config.leftColor {
+                        cell.leftText.textColor = textColor
+                    } else {
+                        cell.leftText.textColor = theme.titleTextColor
+                    }
+                    
+                    if let textColor = config.rightColor  {
+                        cell.rightText.textColor = textColor
+                    } else {
+                        cell.rightText.textColor = theme.titleTextColor
+                    }
+                    
+                    if config.isSelected {
+                        cell.accessoryType = .checkmark
+                    }else {
                         cell.accessoryType = .none
-                        cell.inputTextField.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        cell.inputTextField.keyboardType = dict["keyboard"] as? UIKeyboardType ?? UIKeyboardType.default
-                        cell.inputTextField.returnKeyType = dict["returnKey"] as? UIReturnKeyType ?? UIReturnKeyType.default
-                        
-                        if let placeHolder = dict["placeholder"] as? String {
-                            cell.inputTextField.attributedPlaceholder = NSAttributedString(string: placeHolder,
-                                                                                           attributes: [NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor])
-                        } else {
-                            cell.inputTextField.attributedPlaceholder = NSAttributedString(string: "",
-                                                                                           attributes: [NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor])
-                        }
-                        cell.delegate = self
-                        cell.selectionStyle = .none
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.UrlInputCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? UrlInputCell {
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.SubtitleCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? SubtitleCell {
+                    
+                    cell.textLabel?.text = config.title
+                    cell.accessibilityLabel = config.title
+                    cell.detailTextLabel?.text = config.subTitle
+                    
+                    cell.imageView?.alpha = theme.imageAlpha
+                    
+                    if let image = config.image {
+                        cell.imageView?.image = image
+                        
+                        cell.imageView?.accessibilityIgnoresInvertColors = true
+                    }
+                    
+                    if config.action != nil {
+                        cell.accessoryType = .disclosureIndicator
+                        cell.accessoryView?.accessibilityLabel = config.title
+                    } else {
                         cell.accessoryType = .none
-                        cell.urlTextField.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        cell.urlTextField.keyboardType = UIKeyboardType.URL
-                        cell.urlTextField.returnKeyType = dict["returnKey"] as? UIReturnKeyType ?? UIReturnKeyType.default
-                        
-                        if let placeHolder = dict["placeholder"] as? String {
-                            cell.urlTextField.attributedPlaceholder = NSAttributedString(string: placeHolder,
-                                                                                         attributes: [NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor])
-                        } else {
-                            cell.urlTextField.attributedPlaceholder = NSAttributedString(string: "",
-                                                                                         attributes: [NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor])
-                        }
-                        
-                        cell.delegate = self
-                        cell.selectionStyle = .none
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.ProgressCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? ProgressCell {
-                        cell.updateProgress(withPercent: dict["value"] as? Float ?? 0.0, orProgress: dict["progress"] as? Progress)
+                    
+                    if let font = config.titleFont {
+                        cell.textLabel?.font = font
+                    }
+                    if let subfont = config.subTitleFont{
+                        cell.detailTextLabel?.font = subfont
+                    }
+                    
+                    if let titleColor = config.titleColor {
+                        cell.textLabel?.textColor = titleColor
+                    }
+                    if let subtitleTextColor = config.subTitleColor {
+                        cell.detailTextLabel?.textColor = subtitleTextColor
+                    }
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.BubbleCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? BubbleCell {
+                    
+                    cell.titleLabel?.text = config.title
+                    cell.accessibilityLabel = config.title
+                    if let font = config.font {
+                        cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    
+                    if let bubbleView = cell.bubbleView {
+                        
+                        let bubblePadding:CGFloat = 8
+                        
+                        if let height = config.height {
+                            bubbleView.layer.cornerRadius = (height - bubblePadding*2)/2
+                        }
+                    }
+                    return cell
+                }
+            case let JxContentTableViewCell.LogoCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? LogoCell {
+                    cell.accessoryType = .none
+                    
+                    cell.logoView.alpha = theme.imageAlpha
+                    
+                    cell.logoView.accessibilityIgnoresInvertColors = true
+                    
+                    if let logoPath = config.logo {
+                        cell.logoView.image = theme.fallbackImage
+                        cell.loadLogo(logoPath: logoPath)
+                    } else if let imageName = config.imageName {
+                        cell.logoView.image = UIImage(named: imageName)
+                    }
+                    
+                    if config.action != nil {
+                        cell.accessoryType = .disclosureIndicator
+                        cell.accessoryView?.accessibilityLabel = "Change Logo"
+                    } else {
                         cell.accessoryType = .none
-                        if let text = dict["text"] as? String {
-                            cell.titleLabel.text = text
-                            cell.textValue = text
-                        }
-                        if let font = dict["font"] as? UIFont {
-                            cell.titleLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        if let download = dict["download"] as? String {
-                            cell.downloadUrlString = download
-                        }
-                        cell.titleLabel?.textColor = theme.titleTextColor
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.StepperCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? StepperCell {
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.SwitchCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? SwitchCell {
+                    cell.accessoryType = .none
+                    cell.titleLabel.text = config.title
+                    cell.accessibilityLabel = config.title
+#if os(iOS)
+                    cell.switchButton.isOn = config.on
+#endif
+                    if let font = config.font {
+                        cell.titleLabel.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    cell.titleLabel.textColor = theme.titleTextColor
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.InputCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? InputCell {
+                    cell.accessoryType = .none
+                    cell.inputTextField.text = config.text
+                    cell.accessibilityLabel = config.text
+                    cell.inputTextField.keyboardType = config.keyboardType
+                    cell.inputTextField.returnKeyType = config.returnKeyType
+                    cell.inputTextField.font = theme.getFont(name: theme.fontRegular, size: 16)
+                    let attributes = [
+                        NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor,
+                        NSAttributedString.Key.font: theme.getFont(name: theme.fontRegular, size: 16) as Any
+                    ]
+                    
+                    cell.inputTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" , attributes: attributes)
+                    
+                    cell.delegate = self
+                    cell.selectionStyle = .none
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.UrlInputCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? UrlInputCell {
+                    cell.accessoryType = .none
+                    cell.urlTextField.text = config.text
+                    cell.accessibilityLabel = config.text
+                    cell.urlTextField.keyboardType = UIKeyboardType.URL
+                    cell.urlTextField.returnKeyType = config.returnKey
+                    cell.urlTextField.font = theme.getFont(name: theme.fontRegular, size: 16)
+                    
+                    let attributes = [
+                        NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor,
+                        NSAttributedString.Key.font: theme.getFont(name: theme.fontRegular, size: 16) as Any
+                    ]
+                    cell.urlTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" , attributes: attributes)
+                    
+                    cell.delegate = self
+                    cell.selectionStyle = .none
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.ProgressCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? ProgressCell {
+                    cell.updateProgress(withPercent: config.value, orProgress: config.progress)
+                    cell.accessoryType = .none
+                    if let text = config.title {
+                        cell.titleLabel.text = text
+                        cell.textValue = text
+                    }
+                    if let font = config.font {
+                        cell.titleLabel.font = font
+                    }
+                    if let download = config.urlString {
+                        cell.downloadUrlString = download
+                    }
+                    cell.titleLabel?.textColor = theme.titleTextColor
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.StepperCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? StepperCell {
+                    cell.accessoryType = .none
+                    cell.titleLabel.text = config.title
+                    cell.accessibilityLabel = config.title
+                    if let font = config.font {
+                        cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    cell.defaultValue = config.value
+                    cell.min = config.min
+                    cell.max = config.max
+                    cell.stepSize = config.stepSize
+                    cell.displayFormat = config.displayFormat
+                    cell.delegate = self
+                    cell.selectionStyle = .none
+                    
+                    cell.titleLabel.textColor = theme.titleTextColor
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.TitleCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? TitleCell {
+                    
+                    cell.titleLabel?.text = config.title
+                    cell.accessibilityLabel = config.title
+                    if let font = config.font {
+                        cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
+                    }
+                    if config.action != nil {
+                        cell.accessoryType = .disclosureIndicator
+                        cell.accessoryView?.accessibilityLabel = config.title
+                    } else {
                         cell.accessoryType = .none
-                        cell.titleLabel.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        if let font = dict["font"] as? UIFont {
-                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        cell.defaultValue = dict["value"] as? Double ?? 0
-                        cell.min = dict["min"] as? Double ?? 0
-                        cell.max = dict["max"] as? Double ?? 1
-                        cell.stepSize = dict["step"] as? Double ?? 0.1
-                        cell.displayFormat = dict["displayFormat"] as? String ?? ""
-                        cell.delegate = self
-                        cell.selectionStyle = .none
-                        
-                        cell.titleLabel.textColor = theme.titleTextColor
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
                     }
-                case JxContentTableViewCell.TitleCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? TitleCell {
-                        
-                        cell.titleLabel?.text = dict["text"] as? String
-                        cell.accessibilityLabel = dict["text"] as? String
-                        if let font = dict["font"] as? UIFont {
-                            cell.titleLabel?.font = theme.getFont(name: font.familyName, size: font.pointSize)
-                        }
-                        if dict["action"] != nil {
-                            cell.accessoryType = .disclosureIndicator
-                            cell.accessoryView?.accessibilityLabel = dict["text"] as? String
-                        } else {
-                            cell.accessoryType = .none
-                        }
-                        cell.titleLabel?.textColor = theme.titleTextColor
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                        
-                    }
-                case JxContentTableViewCell.ButtonCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? ButtonCell {
-                        cell.accessoryType = .none
-                        cell.updateWithTitle(dict["buttonTitle"] as? String)
-                        cell.accessibilityLabel = dict["buttonTitle"] as? String
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case JxContentTableViewCell.GraphCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? GraphCell {
-                        cell.accessoryType = .none
-                        
-                        if let data = dict["data"] as? [Double], let labels = dict["labels"] as? [String], let maxRange = dict["maxRange"] as? Double, let height = dict["height"] as? CGFloat, let direction = dict["direction"] as? DetailViewCell.GraphCellDirection {
-                            cell.update(withData: data, andLabels: labels, andMaxRange: maxRange, unit: dict["unit"] as? String, direction: direction, andHeight: height)
-                        }
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case JxContentTableViewCell.CaruselCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? CaruselCell {
-                        cell.accessoryType = .none
-                        cell.delegate = self
-                        if let source = dict["source"] as? CaruselDataSource {
-                            cell.configureCell(withDataSource: source)
-                        }
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case .EpisodeCell:
-                    break
-                case .EpisodeCollectionCell:
-                    break
-                case .GroupCell:
-                    break
-                case .PodcastTableViewCell:
-                    break
-                case .InfoCell:
-                    break
-                case .PodcastCell:
-                    break
-                case .InAppPurchaseCell:
-                    break
-                case .InAppPurchase3xCell:
-                    break
-                case .SegmentBarCell:
-                    if let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue, for: indexPath) as? SegmentBarCell {
-                        cell.accessoryType = .none
-                        
-                        if let values = dict["values"] as? [Float] {
-                            cell.values = values
-                        }
-                        if let titles = dict["titles"] as? [String] {
-                            cell.titles = titles
-                        }
-                        if let colors = dict["colors"] as? [UIColor] {
-                            cell.colors = colors
-                        }
-                        
-                        cell.setNeedsUpdateConstraints()
-                        cell.updateAppearance()
-                        return cell
-                    }
-                case .BookmarkCell:
-                    break
+                    cell.titleLabel?.textColor = theme.titleTextColor
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                    
+                }
+            case let JxContentTableViewCell.ButtonCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? ButtonCell {
+                    cell.accessoryType = .none
+                    cell.updateWithTitle(config.title)
+                    cell.accessibilityLabel = config.title
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.GraphCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? GraphCell {
+                    cell.accessoryType = .none
+                    cell.update(withData: config.data, andLabels: config.labels, andMaxRange: config.maxRange, unit: config.unit, direction: config.direction)
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let JxContentTableViewCell.CaruselCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? CaruselCell {
+                    cell.accessoryType = .none
+                    cell.delegate = self
+                    cell.configureCell(withDataSource: config.source)
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case let .SegmentBarCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? SegmentBarCell {
+                    cell.accessoryType = .none
+                    
+                    cell.values = config.values
+                    cell.titles = config.titles
+                    cell.colors = config.colors
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
+                }
+            case .BookmarkCell:
+                break
+            case let .CustomCell(config):
+                if let cell = tableView.dequeueReusableCell(withIdentifier: config.cell, for: indexPath) as? DetailViewCell {
+                    cell.accessoryType = .none
+                    
+                    cell.setNeedsUpdateConstraints()
+                    cell.updateAppearance()
+                    return cell
                 }
             }
+            
         }
         
         let defaultCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -515,27 +495,96 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
             
-            let dict = content[indexPath.section][indexPath.row]
+            let data = content[indexPath.section][indexPath.row]
             
+            var newHeight: CGFloat = 0
             var minHeight: CGFloat = theme.tableViewCellDefaultHeight
             
-            if let h = dict["height"] as? Int {
-                minHeight = CGFloat(h)
-            } else if let h = dict["height"] as? Float {
-                minHeight = CGFloat(h)
-            } else if let h = dict["height"] as? CGFloat {
-                minHeight = h
+            var font = UIFont.preferredFont(forTextStyle: .body)
+            
+            var text: String?
+            var textFont: UIFont?
+            var sub: String?
+            var subFont: UIFont?
+            var textFrameReduce: CGFloat?
+            
+            switch data {
+            case let .BasicCell(config):
+                text = config.title
+                textFont = config.font
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .RightDetailCell(config):
+                text = config.left
+                textFont = config.leftFont
+                textFrameReduce = config.textFrameReduce
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .SubtitleCell(config):
+                text = config.title
+                textFont = config.titleFont
+                sub = config.subTitle
+                subFont = config.subTitleFont
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .BubbleCell(config):
+                text = config.title
+                textFont = config.font
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .LogoCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .TitleCell(config):
+                text = config.title
+                textFont = config.font
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .SwitchCell(config):
+                text = config.title
+                textFont = config.font
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .InputCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .UrlInputCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .StepperCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .ProgressCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .ButtonCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .CustomCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            default:
+                break
             }
             
             
             
-            var font = UIFont.preferredFont(forTextStyle: .body)
-            
-            var newHeight:CGFloat = 0
-            
-            if let text = dict["text"] as? String {
+            if let text {
                 
-                if let customFont = dict["font"] as? UIFont {
+                if let customFont = textFont {
                     let theme = ThemeManager.currentTheme()
                     if let f = theme.getFont(name: customFont.familyName, size: customFont.pointSize) {
                         font = f
@@ -546,7 +595,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 
                 var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
                 
-                if let textFrameReduce = dict["textFrameReduce"] as? CGFloat {
+                if let textFrameReduce {
                     width = self.view.frame.size.width - textFrameReduce
                 }
                 
@@ -558,9 +607,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 newHeight += CGFloat(ceilf(Float(rect.size.height)) + 12.0)
                 
             }
-            if let text = dict["sub"] as? String {
+            if let text = sub {
                 
-                if let customFont = dict["subfont"] as? UIFont {
+                if let customFont = subFont {
                     let theme = ThemeManager.currentTheme()
                     if let f = theme.getFont(name: customFont.familyName, size: customFont.pointSize) {
                         font = f
@@ -571,7 +620,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 
                 var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
                 
-                if let textFrameReduce = dict["textFrameReduce"] as? CGFloat {
+                if let textFrameReduce {
                     width = self.view.frame.size.width - textFrameReduce
                 }
                 
@@ -587,7 +636,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             if newHeight < minHeight {
                 newHeight = minHeight
             }
-            
             
             return newHeight
         }
@@ -648,115 +696,99 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
             
-            let dict = content[indexPath.section][indexPath.row]
+            let data = content[indexPath.section][indexPath.row]
             
-            if dict["action"] != nil {
-                if let cellType = dict["cell"] as? JxContentTableViewCell {
-                    switch (cellType) {
-                    case JxContentTableViewCell.EpisodeCell:
-                        break
-                    case JxContentTableViewCell.EpisodeCollectionCell:
-                        break
-                    case JxContentTableViewCell.BookmarkCell:
-                        break
-                    case JxContentTableViewCell.GroupCell:
-                        break
-                    case JxContentTableViewCell.PodcastTableViewCell:
-                        break
-                    case JxContentTableViewCell.InfoCell:
-                        break
-                    case JxContentTableViewCell.GraphCell:
-                        break
-                    case JxContentTableViewCell.PodcastCell:
-                        break
-                    case JxContentTableViewCell.BasicCell:
-                        if let action = dict["action"] as? DetailViewCell.BasicCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                        break
-                    case JxContentTableViewCell.RightDetailCell:
-                        if let action = dict["action"] as? DetailViewCell.RightDetailCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                    case JxContentTableViewCell.SubtitleCell:
-                        if let action = dict["action"] as? DetailViewCell.SubtitleCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                    case JxContentTableViewCell.BubbleCell:
-                        if let action = dict["action"] as? DetailViewCell.BubbleCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                    case JxContentTableViewCell.LogoCell:
-                        if let action = dict["action"] as? DetailViewCell.LogoCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                    case JxContentTableViewCell.TitleCell:
-                        if let action = dict["action"] as? DetailViewCell.TitleCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                        break
-                    case JxContentTableViewCell.SwitchCell:
-                        if let action = dict["action"] as? DetailViewCell.SwitchCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
-                                
-                                var newValue = false
-                                #if os(OSX) || os(iOS)
-                                if let switchButton = cell.switchButton {
-                                    newValue = !switchButton.isOn
-                                    switchButton.setOn(newValue, animated: true)
-                                }
-                                #endif
-                                action(cell, indexPath, newValue)
-                            }
-                        }
-                        break
-                    case JxContentTableViewCell.InputCell:
-                        break
-                    case JxContentTableViewCell.UrlInputCell:
-                        break
-                    case JxContentTableViewCell.StepperCell:
-                        break
-                    case JxContentTableViewCell.ProgressCell:
-                        if let action = dict["action"] as? DetailViewCell.ProgressCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
-                                var percent: Float = 0
-                                if let progressBar = cell.progressBar {
-                                    percent = progressBar.progress
-                                }
-                                action(cell, indexPath, percent)
-                            }
-                        }
-                        break
-                    case JxContentTableViewCell.InAppPurchaseCell:
-                        break
-                    case JxContentTableViewCell.InAppPurchase3xCell:
-                        break
-                    case JxContentTableViewCell.ButtonCell:
-                        if let action = dict["action"] as? DetailViewCell.ButtonCellAction {
-                            if let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
-                                action(cell, indexPath)
-                            }
-                        }
-                        break
-                    case JxContentTableViewCell.CaruselCell:
-                        break
-                    case JxContentTableViewCell.SegmentBarCell:
-                        break
+            switch (data) {
+            case JxContentTableViewCell.BookmarkCell:
+                break
+            case JxContentTableViewCell.GraphCell:
+                break
+            case JxContentTableViewCell.BasicCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
+                        action(self, cell, indexPath)
                     }
                 }
+                break
+            case JxContentTableViewCell.RightDetailCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+            case JxContentTableViewCell.SubtitleCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+            case JxContentTableViewCell.BubbleCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+            case JxContentTableViewCell.LogoCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+            case JxContentTableViewCell.TitleCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+                break
+            case JxContentTableViewCell.SwitchCell:
+                if let action = data.getAction() as? DetailViewCell.SwitchCellAction {
+                    if let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
+                        
+                        var newValue = false
+#if os(OSX) || os(iOS)
+                        if let switchButton = cell.switchButton {
+                            newValue = !switchButton.isOn
+                            switchButton.setOn(newValue, animated: true)
+                        }
+#endif
+                        action(cell, indexPath, newValue)
+                    }
+                }
+                break
+            case JxContentTableViewCell.InputCell:
+                break
+            case JxContentTableViewCell.UrlInputCell:
+                break
+            case JxContentTableViewCell.StepperCell:
+                break
+            case JxContentTableViewCell.ProgressCell:
+                if let action = data.getAction() as? DetailViewCell.ProgressCellAction {
+                    if let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
+                        var percent: Float = 0
+                        if let progressBar = cell.progressBar {
+                            percent = progressBar.progress
+                        }
+                        action(cell, indexPath, percent)
+                    }
+                }
+                break
+            case JxContentTableViewCell.ButtonCell:
+                if let action = data.getAction() as? ContentTableViewCellData.Action {
+                    if let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
+                        action(self, cell, indexPath)
+                    }
+                }
+                break
+            case JxContentTableViewCell.CaruselCell:
+                break
+            case JxContentTableViewCell.SegmentBarCell:
+                break
+            case .CustomCell(_):
+                break
             }
+            
+            
         }
     }
     
@@ -765,13 +797,16 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     open override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let theme = ThemeManager.currentTheme()
         if let contentSecondArray = self.content.first,
-           let first = contentSecondArray.first,
-           let cellType = first["cell"] as? JxContentTableViewCell,
-           cellType == JxContentTableViewCell.LogoCell {
+           let cellType = contentSecondArray.first{
             
-            if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LogoCell {
-                
-                cell.updateCell(withOffset: scrollView.contentOffset.y + self.tableView.layoutMargins.top)
+            switch cellType {
+            case .LogoCell:
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LogoCell {
+                    
+                    cell.updateCell(withOffset: scrollView.contentOffset.y + self.tableView.layoutMargins.top)
+                }
+            default:
+                break
             }
         }
         if let paths = self.tableView.indexPathsForVisibleRows {

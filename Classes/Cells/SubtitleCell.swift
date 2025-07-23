@@ -11,39 +11,46 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerSubtitleCell() {
-        self.tableView.register(SubtitleCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.SubtitleCell.rawValue)
-        self.tableView.register(UINib(nibName: "SubtitleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.SubtitleCell.rawValue)
+        self.tableView.register(SubtitleCell.classForCoder(), forCellReuseIdentifier: "SubtitleCell")
+        self.tableView.register(UINib(nibName: "SubtitleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "SubtitleCell")
     }
 }
 
 public extension DetailViewCell {
 
-    typealias SubtitleCellAction = (_ cell: SubtitleCell, _ indexpath: IndexPath) -> Void
-
+    struct SubtitleCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var title: String?
+        var titleFont: UIFont?
+        var titleColor: UIColor?
+        var subTitle: String?
+        var subTitleFont: UIFont?
+        var subTitleColor: UIColor?
+        var image: UIImage?
+        
+        var action: Action?
+    }
+    
     class func SubtitleCell(withTitle title: String?,
                             andTitleFont titleFont: UIFont? = nil,
                             andSubtitle sub: String?,
                             andSubtitleFont subTitleFont: UIFont? = nil,
                             andImage image: UIImage? = nil,
-                            andHeight height: Any = "auto",
-                            andAction action: SubtitleCellAction? = nil ) -> ContentTableViewCellData {
+                            andHeight height: CGFloat? = nil,
+                            andAction action: ContentTableViewCellData.Action? = nil ) -> JxContentTableViewCell {
 
         let theme = ThemeManager.currentTheme()
         
-        var dict = ["cell": JxContentTableViewCell.SubtitleCell,
-                    "height": height,
-                    "text": title as Any,
-                    "font": (titleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
-                    "sub": sub as Any,
-                    "subfont": (subTitleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium)) as Any,
-                    "image": image as Any,
-                    "textFrameReduce": 16.0 * 2 + (action == nil ? 0 : 30)
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = SubtitleCellData(height: height,
+                                    title: title,
+                                    titleFont: titleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium),
+                                    titleColor: theme.titleTextColor,
+                                    subTitle: sub,
+                                    subTitleFont: subTitleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium),
+                                    subTitleColor: theme.subtitleTextColor,
+                                    action: action)
+        
+        return JxContentTableViewCell.SubtitleCell(data)
     }
 
 }

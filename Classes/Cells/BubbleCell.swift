@@ -11,27 +11,26 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerBubbleCell() {
-        self.tableView.register(BubbleCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.BubbleCell.rawValue)
-        self.tableView.register(UINib(nibName: "BubbleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.BubbleCell.rawValue)
+        self.tableView.register(BubbleCell.classForCoder(), forCellReuseIdentifier: "BubbleCell")
+        self.tableView.register(UINib(nibName: "BubbleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "BubbleCell")
     }
 }
 public extension DetailViewCell {
 
-    typealias BubbleCellAction = (_ cell: BubbleCell, _ indexpath: IndexPath) -> Void
-
-    class func BubbleCell(withTitle title: String?, andHeight height: Any = "auto", andAction action: BubbleCellAction? = nil ) -> ContentTableViewCellData {
+    struct BubbleCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var title: String?
+        var font: UIFont?
+        var action: Action?
+    }
+    
+    class func BubbleCell(withTitle title: String?, andHeight height: CGFloat?, andAction action: ContentTableViewCellData.Action? = nil ) -> JxContentTableViewCell {
         
         let theme = ThemeManager.currentTheme()
+        
+        let data = BubbleCellData(height: height, title: title, font: theme.getFont(name: theme.fontBold, size: 13), action: action)
 
-        var dict = ["cell": JxContentTableViewCell.BubbleCell,
-                    "height": height as Any,
-                    "text": title as Any,
-                    "font": UIFont(name: theme.fontBold, size: 13) as Any]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        return JxContentTableViewCell.BubbleCell(data)
     }
 }
 

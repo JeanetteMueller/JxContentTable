@@ -11,35 +11,65 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerRightDetailCell() {
-        self.tableView.register(RightDetailCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.RightDetailCell.rawValue)
-        self.tableView.register(UINib(nibName: "RightDetailCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.RightDetailCell.rawValue)
+        self.tableView.register(RightDetailCell.classForCoder(), forCellReuseIdentifier: "RightDetailCell")
+        self.tableView.register(UINib(nibName: "RightDetailCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "RightDetailCell")
     }
 }
 
 public extension DetailViewCell {
 
-    typealias RightDetailCellAction = (_ cell: RightDetailCell, _ indexpath: IndexPath) -> Void
-
-    class func RightDetailCell(withLeftText left: String, andRightText right: String?, andHeight height: Any = "auto", andTextColorLeft leftTextColor: UIColor? = nil, andTextColorRight rightTextColor: UIColor? = nil, isSelected selected: Bool = false, andAction action: RightDetailCellAction? = nil) -> ContentTableViewCellData {
+    struct RightDetailCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        public let key: String?
+        
+        public var left: String?
+        public var leftFont: UIFont?
+        public var leftColor: UIColor?
+        
+        public var right: String?
+        public var rightFont: UIFont?
+        public var rightColor: UIColor?
+        
+        public var options: [String]? = nil
+        public var defaultValue: String? = nil
+        public var isSelected: Bool = false
+        
+        public var textFrameReduce: CGFloat = 0
+        
+        public var action: Action?
+    }
+    
+    class func RightDetailCell(key: String? = nil,
+                               withLeftText left: String? = nil,
+                               andRightText right: String? = nil,
+                               andHeight height: CGFloat? = nil,
+                               andTextColorLeft leftTextColor: UIColor? = nil,
+                               andTextColorRight rightTextColor: UIColor? = nil,
+                               options: [String]? = nil,
+                               defaultValue: String? = nil,
+                               isSelected selected: Bool = false,
+                               andAction action: ContentTableViewCellData.Action? = nil) -> JxContentTableViewCell {
 
         let theme = ThemeManager.currentTheme()
         
-        var dict = ["cell": JxContentTableViewCell.RightDetailCell,
-                    "height": height,
-                    "text": left as Any,
-                    "leftfont": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "rightfont": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentLarge) as Any,
-                    "textColor": leftTextColor as Any,
-                    "textColorRight": rightTextColor as Any,
-                    "right": right as Any,
-                    "selected": selected as Any,
-                    "textFrameReduce": (UIScreen.main.bounds.size.width - (theme.contentInsetFromDisplayBorder * 2)) * 0.7
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = RightDetailCellData(height: height,
+                                       key: key,
+                                       left: left,
+                                       leftFont: theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle),
+                                       leftColor: leftTextColor,
+                                       
+                                       right: right,
+                                       rightFont: theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentLarge),
+                                       rightColor: rightTextColor,
+                                       
+                                       options: options,
+                                       defaultValue: defaultValue,
+                                       isSelected: selected,
+                                       textFrameReduce: (UIScreen.main.bounds.size.width - (theme.contentInsetFromDisplayBorder * 2)) * 0.7,
+                                       
+                                       action: action)
+        
+        return JxContentTableViewCell.RightDetailCell(data)
     }
 }
 

@@ -12,23 +12,23 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerButtonCell() {
-        self.tableView.register(ButtonCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.ButtonCell.rawValue)
-        self.tableView.register(UINib(nibName: "ButtonCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.ButtonCell.rawValue)
+        self.tableView.register(ButtonCell.classForCoder(), forCellReuseIdentifier: "ButtonCell")
+        self.tableView.register(UINib(nibName: "ButtonCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "ButtonCell")
     }
 }
 
 public extension DetailViewCell {
-    typealias ButtonCellAction = (_ cell: ButtonCell, _ indexpath: IndexPath) -> Void
+    struct ButtonCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var title: String
+        var action: Action?
+    }
+    
+    class func ButtonCell(withButtonTitle title: String, andAction action: ContentTableViewCellData.Action? = nil) -> JxContentTableViewCell {
+        
+        let data = ButtonCellData(height: 100, title: title, action: action)
 
-    class func ButtonCell(withButtonTitle buttonTitle: String, andAction action: ButtonCellAction? = nil) -> ContentTableViewCellData {
-        var dict = ["cell": JxContentTableViewCell.ButtonCell,
-                    "height": 100 as Any,
-                    "buttonTitle": buttonTitle as Any
-        ]
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        return JxContentTableViewCell.ButtonCell(data)
     }
 }
 

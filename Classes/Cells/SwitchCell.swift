@@ -11,8 +11,8 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerSwitchCell() {
-        self.tableView.register(SwitchCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.SwitchCell.rawValue)
-        self.tableView.register(UINib(nibName: "SwitchCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.SwitchCell.rawValue)
+        self.tableView.register(SwitchCell.classForCoder(), forCellReuseIdentifier: "SwitchCell")
+        self.tableView.register(UINib(nibName: "SwitchCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "SwitchCell")
     }
 }
 
@@ -20,22 +20,22 @@ public extension DetailViewCell {
 
     typealias SwitchCellAction = (_ cell: SwitchCell, _ indexpath: IndexPath, _ on: Bool) -> Void
 
-    class func SwitchCell(withTitle title: String?, isOn on: Bool, andAction action: SwitchCellAction? = nil) -> ContentTableViewCellData {
+    struct SwitchCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        public let title: String?
+        public let key: String?
+        public let font: UIFont?
+        public let on: Bool
+        public let action: SwitchCellAction?
+    }
+    
+    class func SwitchCell(withTitle title: String?, key: String? = nil, isOn on: Bool, andAction action: SwitchCellAction? = nil) -> JxContentTableViewCell {
         
         let theme = ThemeManager.currentTheme()
 
-        var dict = ["cell": JxContentTableViewCell.SwitchCell,
-                    "height": "auto",
-                    "text": title as Any,
-                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "on": on as Any,
-                    "textFrameReduce": (theme.contentInsetFromDisplayBorder * 2) + 50
-        ]
+        let data = SwitchCellData(title: title, key: key, font: theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle), on: on, action: action)
 
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        return JxContentTableViewCell.SwitchCell(data)
     }
 }
 

@@ -10,20 +10,28 @@ import UIKit
 
 public extension UITableViewController {
     func registerCaruselCell() {
-        self.tableView.register(CaruselCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.CaruselCell.rawValue)
-        self.tableView.register(UINib(nibName: "CaruselCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.CaruselCell.rawValue)
+        self.tableView.register(CaruselCell.classForCoder(), forCellReuseIdentifier: "CaruselCell")
+        self.tableView.register(UINib(nibName: "CaruselCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "CaruselCell")
     }
 }
 
 public extension DetailViewCell {
 
-    class func CaruselCell(withDataSource source: CaruselDataSource) -> ContentTableViewCellData {
-        let dict = ["cell": JxContentTableViewCell.CaruselCell,
-                    "height": 100,
+    struct CaruselCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var source: CaruselDataSource
+    }
+    
+    class func CaruselCell(withDataSource source: CaruselDataSource) -> JxContentTableViewCell {
+        
+        let data = CaruselCellData(height: 100, source: source)
+        
+//        let dict = ["cell": JxContentTableViewCell.CaruselCell,
+//                    "height": 100,
+//
+//                    "source": source as Any]
 
-                    "source": source as Any]
-
-        return dict
+        return JxContentTableViewCell.CaruselCell(data)
 
     }
 }

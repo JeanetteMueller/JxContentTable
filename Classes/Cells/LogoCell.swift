@@ -13,48 +13,32 @@ import JxSwiftHelperForUiKit
 
 public extension UITableViewController {
     func registerLogoCell() {
-        self.tableView.register(LogoCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.LogoCell.rawValue)
-        self.tableView.register(UINib(nibName: "LogoCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.LogoCell.rawValue)
+        self.tableView.register(LogoCell.classForCoder(), forCellReuseIdentifier: "LogoCell")
+        self.tableView.register(UINib(nibName: "LogoCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "LogoCell")
     }
 }
 
 public extension DetailViewCell {
 
-    typealias LogoCellAction = (_ cell: LogoCell, _ indexpath: IndexPath) -> Void
-
-    class func LogoCell(withImageString logo: String?, andHeight height: Any, andAction action: LogoCellAction? = nil) -> ContentTableViewCellData {
-
-        var dict = ["cell": JxContentTableViewCell.LogoCell,
-                    "height": height,
-                    "logo": logo as Any]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+    struct LogoCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var logo: String?
+        var imageName: String?
+        var action: Action?
     }
-    class func LogoCell(withImageName name: String?, andHeight height: Any, andAction action: LogoCellAction? = nil) -> ContentTableViewCellData {
+    
+    class func LogoCell(withImageString logo: String?, andHeight height: CGFloat?, andAction action: ContentTableViewCellData.Action? = nil) -> JxContentTableViewCell {
 
-        var dict = ["cell": JxContentTableViewCell.LogoCell,
-                    "height": height,
-                    "imageName": name as Any]
+        let data = LogoCellData(height: height, logo: logo, action: action)
 
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        return JxContentTableViewCell.LogoCell(data)
     }
-    //    class func LogoCell(withSvgName svg:String?, andHeight height:Any, andAction action: LogoCellAction? = nil) -> ContentTableViewCellData {
-    //
-    //        var dict = ["cell" : JxContentTableViewCell.LogoCell,
-    //                    "height": height,
-    //                    "svgname": svg as Any]
-    //
-    //        if action != nil{
-    //            dict["action"] = action as Any
-    //        }
-    //        return dict
-    //    }
+    class func LogoCell(withImageName name: String?, andHeight height: CGFloat?, andAction action: ContentTableViewCellData.Action? = nil) -> JxContentTableViewCell {
+
+        let data = LogoCellData(height: height, imageName: name, action: action)
+        
+        return JxContentTableViewCell.LogoCell(data)
+    }
 }
 
 public class LogoCell: DetailViewCell {

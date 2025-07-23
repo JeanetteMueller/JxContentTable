@@ -7,4 +7,20 @@
 
 import Foundation
 
-public typealias ContentTableViewCellData = [String: Any]
+//public typealias ContentTableViewCellData = [String: Any]
+
+
+public protocol ContentTableViewCellData {
+    
+    typealias Action = (_ vc: UIViewController?, _ cell: DetailViewCell, _ indexpath: IndexPath) -> Void
+    
+    var height: CGFloat? { get }
+}
+
+public protocol ContentTableViewCustomCellData {
+    
+    var cell: String { get }
+    var height: CGFloat? { get }
+    
+    var action: Any? { get }
+}

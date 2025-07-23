@@ -12,29 +12,31 @@ import JxThemeManager
 public extension UITableViewController {
     func registerTitleCell() {
         
-        self.tableView.register(TitleCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.TitleCell.rawValue)
-        self.tableView.register(UINib(nibName: "TitleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.TitleCell.rawValue)
+        self.tableView.register(TitleCell.classForCoder(), forCellReuseIdentifier: "TitleCell")
+        self.tableView.register(UINib(nibName: "TitleCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "TitleCell")
     }
 }
 
 public extension DetailViewCell {
 
-    typealias TitleCellAction = (_ cell: TitleCell, _ indexpath: IndexPath) -> Void
-
-    class func TitleCell(withTitle title: String?, andHeight height: Any = "auto", withTextAlign align: NSTextAlignment = .center, andAction action: TitleCellAction? = nil) -> ContentTableViewCellData {
+    struct TitleCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var title: String
+        var font: UIFont?
+        var align: NSTextAlignment
+        var action: Action?
+    }
+    class func TitleCell(withTitle title: String, font: UIFont? = nil, height: CGFloat? = nil, align: NSTextAlignment = .center, action: ContentTableViewCellData.Action? = nil) -> JxContentTableViewCell {
 
         let theme = ThemeManager.currentTheme()
         
-        var dict = ["cell": JxContentTableViewCell.TitleCell,
-                    "height": height,
-                    "text": title as Any,
-                    "font": theme.getFont(name: theme.fontLight, size: theme.fontSizeLargeTitle) as Any,
-                    "align": align as Any]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = TitleCellData(height: height,
+                                 title: title,
+                                 font: font ?? theme.getFont(name: theme.fontLight, size: theme.fontSizeLargeTitle),
+                                 align: align,
+                                 action: action)
+        
+        return JxContentTableViewCell.TitleCell(data)
     }
 }
 

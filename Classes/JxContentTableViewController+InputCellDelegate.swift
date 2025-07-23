@@ -15,9 +15,9 @@ extension JxContentTableViewController: InputCellDelegate {
 
             if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
 
-                let dict = content[indexPath.section][indexPath.row]
+                let cellData = content[indexPath.section][indexPath.row]
 
-                if let action = dict["action"] as? DetailViewCell.InputCellAction {
+                if let action = cellData.getAction() as? DetailViewCell.InputCellAction {
 
                     let newValue = input?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
@@ -31,9 +31,9 @@ extension JxContentTableViewController: InputCellDelegate {
 
             if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
 
-                let dict = content[indexPath.section][indexPath.row]
+                let cellData = content[indexPath.section][indexPath.row]
 
-                if let action = dict["action"] as? DetailViewCell.InputCellAction {
+                if let action = cellData.getAction() as? DetailViewCell.InputCellAction {
                     let newValue = input?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
                     action(cell, indexPath, newValue, false)

@@ -10,29 +10,39 @@ import JxThemeManager
 
 public extension UITableViewController {
     func registerSegmentBarCell() {
-        self.tableView.register(SegmentBarCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.SegmentBarCell.rawValue)
-        self.tableView.register(UINib(nibName: "SegmentBarCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.SegmentBarCell.rawValue)
+        self.tableView.register(SegmentBarCell.classForCoder(), forCellReuseIdentifier: "SegmentBarCell")
+        self.tableView.register(UINib(nibName: "SegmentBarCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "SegmentBarCell")
     }
 }
 
 public extension DetailViewCell {
     
-    class func SegmentBarCell(withPercentageValues values: [Float],
-                              andTitles titles: [String],
-                              andColors colors: [UIColor]) -> ContentTableViewCellData {
-        
-        let dict = ["cell": JxContentTableViewCell.SegmentBarCell,
-                    "values": values as Any,
-                    "titles": titles as Any,
-                    "colors": colors as Any,
-                    "height": 10 + 14 + 5 + 20 + 10
-                    
-        ]
-        
-        return dict
+    struct SegmentBarCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        var values: [Float]
+        var titles: [String]
+        var colors: [UIColor]
     }
     
-
+    class func SegmentBarCell(withPercentageValues values: [Float],
+                              andTitles titles: [String],
+                              andColors colors: [UIColor]) -> JxContentTableViewCell {
+        
+        let data = SegmentBarCellData(height: 10 + 14 + 5 + 20 + 10,
+                                      values: values,
+                                      titles: titles,
+                                      colors: colors)
+        
+//        let dict = ["cell": JxContentTableViewCell.SegmentBarCell,
+//                    "values": values as Any,
+//                    "titles": titles as Any,
+//                    "colors": colors as Any,
+//                    "height": 10 + 14 + 5 + 20 + 10
+//                    
+//        ]
+        
+        return JxContentTableViewCell.SegmentBarCell(data)
+    }
 }
 
 public class SegmentBarCell: DetailViewCell {

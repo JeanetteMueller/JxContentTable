@@ -15,9 +15,9 @@ extension JxContentTableViewController: StepperCellDelegate {
 
             if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
 
-                let dict = content[indexPath.section][indexPath.row]
+                let cellData = content[indexPath.section][indexPath.row]
 
-                if let action = dict["action"] as? DetailViewCell.StepperCellAction {
+                if let action = cellData.getAction() as? DetailViewCell.StepperCellAction {
                     action(cell, indexPath, value)
                 }
             }

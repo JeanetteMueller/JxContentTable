@@ -12,8 +12,8 @@ import JxSwiftHelper
 
 public extension UITableViewController {
     func registerStepperCell() {
-        self.tableView.register(StepperCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.StepperCell.rawValue)
-        self.tableView.register(UINib(nibName: "StepperCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.StepperCell.rawValue)
+        self.tableView.register(StepperCell.classForCoder(), forCellReuseIdentifier: "StepperCell")
+        self.tableView.register(UINib(nibName: "StepperCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "StepperCell")
     }
 }
 
@@ -21,26 +21,36 @@ public extension DetailViewCell {
 
     typealias StepperCellAction = (_ cell: StepperCell, _ indexpath: IndexPath, _ value: Double) -> Void
 
-    class func StepperCell(withTitle title: String?, withValue value: Double, withMin min: Double, withMax max: Double, andStepsize step: Double, andFormat format: String, andAction action: StepperCellAction? = nil) -> ContentTableViewCellData {
+    struct StepperCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        public var title: String?
+        public let key: String?
+        public var font: UIFont?
+        public var value: Double
+        public var min: Double = 0
+        public var max: Double = 1
+        public var stepSize: Double = 0.1
+        public var displayFormat: String = ""
+        public var textFrameReduce: CGFloat?
+        public var action: StepperCellAction?
+    }
+    
+    class func StepperCell(withTitle title: String?, key: String? = nil, withValue value: Double, withMin min: Double, withMax max: Double, andStepsize step: Double, andFormat format: String, andAction action: StepperCellAction? = nil) -> JxContentTableViewCell {
         
         let theme = ThemeManager.currentTheme()
         
-        var dict = ["cell": JxContentTableViewCell.StepperCell,
-                    "text": title as Any,
-                    "font": theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle) as Any,
-                    "height": "auto",
-                    "value": value as Any,
-                    "step": step as Any,
-                    "min": min as Any,
-                    "max": max as Any,
-                    "displayFormat": format,
-                    "textFrameReduce": (theme.contentInsetFromDisplayBorder * 2) + (30 * 2) + 100
-        ]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = StepperCellData(title: title,
+                                   key: key,
+                                   font: theme.getFont(name: theme.fontRegular, size: theme.fontSizeContenTitle),
+                                   value: value,
+                                   min: min,
+                                   max: max,
+                                   stepSize: step,
+                                   displayFormat: format,
+                                   textFrameReduce: (theme.contentInsetFromDisplayBorder * 2) + (30 * 2) + 100,
+                                   action: action)
+        
+        return JxContentTableViewCell.StepperCell(data)
     }
 }
 

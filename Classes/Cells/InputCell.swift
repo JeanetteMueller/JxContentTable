@@ -9,30 +9,41 @@
 import UIKit
 import JxThemeManager
 
+
+
 public extension UITableViewController {
     func registerInputCell() {
-        self.tableView.register(InputCell.classForCoder(), forCellReuseIdentifier: JxContentTableViewCell.InputCell.rawValue)
-        self.tableView.register(UINib(nibName: "InputCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: JxContentTableViewCell.InputCell.rawValue)
+        self.tableView.register(InputCell.classForCoder(), forCellReuseIdentifier: "InputCell")
+        self.tableView.register(UINib(nibName: "InputCell", bundle: JxBasicTableViewController.loadBundle), forCellReuseIdentifier: "InputCell")
     }
 }
 
 public extension DetailViewCell {
 
     typealias InputCellAction = (_ cell: InputCell, _ indexpath: IndexPath, _ value: String?, _ submit: Bool) -> Void
+    
+    struct InputCellData: ContentTableViewCellData {
+        public var height: CGFloat?
+        
+        let text: String?
+        let font: UIFont?
+        let placeholder: String?
+        let keyboardType: UIKeyboardType
+        let returnKeyType: UIReturnKeyType
+        
+        var action: InputCellAction?
+    }
 
-    class func InputCell(withValue value: String?, andPlaceholder placeholder: String?, andKeyboardType keyboard: UIKeyboardType, andReturnKey returnKey: UIReturnKeyType, andAction action: InputCellAction? = nil) -> ContentTableViewCellData {
+    class func InputCell(withValue value: String?,
+                         andFont font: UIFont? = nil,
+                         andPlaceholder placeholder: String?,
+                         andKeyboardType keyboard: UIKeyboardType,
+                         andReturnKey returnKey: UIReturnKeyType,
+                         andAction action: InputCellAction? = nil) -> JxContentTableViewCell {
 
-        var dict = ["cell": JxContentTableViewCell.InputCell,
-                    "height": 60 as Any,
-                    "text": value as Any,
-                    "placeholder": placeholder as Any,
-                    "keyboard": keyboard as Any,
-                    "returnKey": returnKey as Any]
-
-        if action != nil {
-            dict["action"] = action as Any
-        }
-        return dict
+        let data = InputCellData(height: 60, text: value, font: font, placeholder: placeholder, keyboardType: keyboard, returnKeyType: returnKey, action: action)
+        
+        return JxContentTableViewCell.InputCell(data)
     }
 }
 
