@@ -48,6 +48,7 @@ public extension DetailViewCell {
                                     subTitle: sub,
                                     subTitleFont: subTitleFont ?? theme.getFont(name: theme.fontRegular, size: theme.fontSizeContentMedium),
                                     subTitleColor: theme.subtitleTextColor,
+                                    image: image,
                                     action: action)
         
         return JxContentTableViewCell.SubtitleCell(data)
@@ -56,5 +57,4 @@ public extension DetailViewCell {
 }
 
 public class SubtitleCell: DetailViewCell {
-
 }

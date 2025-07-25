@@ -237,8 +237,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     
                     if let image = config.image {
                         cell.imageView?.image = image
-                        
+                        cell.imageView?.clipsToBounds = true
                         cell.imageView?.accessibilityIgnoresInvertColors = true
+                        cell.imageView?.layer.cornerRadius = config.height ?? 50 / 100 * theme.cornerRadiusPercent
                     }
                     
                     if config.action != nil {
@@ -470,8 +471,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     cell.updateAppearance()
                     return cell
                 }
-            case .BookmarkCell:
-                break
             case let .CustomCell(config):
                 if let cell = tableView.dequeueReusableCell(withIdentifier: config.cell, for: indexPath) as? DetailViewCell {
                     cell.accessoryType = .none
@@ -576,8 +575,18 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 if let h = config.height {
                     minHeight = h
                 }
-            default:
-                break
+            case let .GraphCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .CaruselCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
+            case let .SegmentBarCell(config):
+                if let h = config.height {
+                    minHeight = h
+                }
             }
             
             
@@ -699,8 +708,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             let data = content[indexPath.section][indexPath.row]
             
             switch (data) {
-            case JxContentTableViewCell.BookmarkCell:
-                break
             case JxContentTableViewCell.GraphCell:
                 break
             case JxContentTableViewCell.BasicCell:

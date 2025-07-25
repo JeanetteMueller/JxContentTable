@@ -118,7 +118,9 @@ public class GraphCell: DetailViewCell {
                 referenceLine.shouldShowReferenceLineUnits = true
                 referenceLine.shouldShowReferenceLines = true
 
-                referenceLine.referenceLineLabelFont = UIFont(name: theme.fontMedium, size: 8)!
+                if let font = theme.getFont(name: theme.fontMedium, size: 8) {
+                    referenceLine.referenceLineLabelFont = font
+                }
                 referenceLine.referenceLineColor = theme.subtitleTextColor.withAlphaComponent(0.2)
                 referenceLine.referenceLineLabelColor = theme.titleTextColor
 

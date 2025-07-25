@@ -27,8 +27,6 @@ public enum JxContentTableViewCell {
     
     case CustomCell(_ config: any ContentTableViewCustomCellData)
     
-    case BookmarkCell
-    
     public var reusableCellIdentifier: String {
         return switch self {
         case .BasicCell : "BasicCell"
@@ -47,7 +45,6 @@ public enum JxContentTableViewCell {
         case .CaruselCell : "CaruselCell"
         case .SegmentBarCell : "SegmentBarCell"
         case let .CustomCell(config): config.cell
-        case .BookmarkCell : "BookmarkCell"
         }
     }
     
@@ -80,7 +77,11 @@ public enum JxContentTableViewCell {
             config.action as Any
         case let .CustomCell(config):
             config.action
-        default:
+        case .GraphCell(_):
+            nil
+        case .CaruselCell(_):
+            nil
+        case .SegmentBarCell(_):
             nil
         }
     }
