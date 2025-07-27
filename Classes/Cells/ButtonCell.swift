@@ -45,6 +45,7 @@ public class ButtonCell: DetailViewCell {
         button.layer.borderColor = theme.actionButtonsColor.cgColor
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 30
+        button.layer.cornerCurve = .continuous
         button.titleLabel?.font = theme.getFont(name: theme.fontRegular, size: 20)
         button.setTitleColor(theme.actionButtonsColor, for: .normal)
 

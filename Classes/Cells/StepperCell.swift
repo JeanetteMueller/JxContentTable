@@ -130,7 +130,9 @@ public class StepperCell: DetailViewCell {
         valueLabel.font = theme.getFont(name: theme.fontMedium, size: theme.fontSizeContentLarge)
 
         upButtonBackground?.layer.cornerRadius = 12
+        upButtonBackground?.layer.cornerCurve = .continuous
         downButtonBackground?.layer.cornerRadius = 12
+        downButtonBackground?.layer.cornerCurve = .continuous
 
         valueLabel.text = String(format: displayFormat, defaultValue)
 

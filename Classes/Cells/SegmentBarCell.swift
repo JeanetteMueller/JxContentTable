@@ -63,6 +63,7 @@ public class SegmentBarCell: DetailViewCell {
         
         self.bar.backgroundColor = .black
         self.bar.layer.cornerRadius = 7
+        self.bar.layer.cornerCurve = .continuous
         
         self.backgroundColor = theme.backgroundColor
         

@@ -240,6 +240,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.imageView?.clipsToBounds = true
                         cell.imageView?.accessibilityIgnoresInvertColors = true
                         cell.imageView?.layer.cornerRadius = config.height ?? 50 / 100 * theme.cornerRadiusPercent
+                        cell.imageView?.layer.cornerCurve = .continuous
                     }
                     
                     if config.action != nil {
@@ -285,6 +286,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         
                         if let height = config.height {
                             bubbleView.layer.cornerRadius = (height - bubblePadding*2)/2
+                            bubbleView.layer.cornerCurve = .continuous
                         }
                     }
                     return cell

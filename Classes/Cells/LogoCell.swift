@@ -52,6 +52,7 @@ public class LogoCell: DetailViewCell {
 
         self.logoView.clipsToBounds = true
         self.logoView.layer.cornerRadius = self.logoView.frame.size.height / 100 * theme.cornerRadiusPercent
+        self.logoView.layer.cornerCurve = .continuous
 
         super.updateAppearance()
     }
