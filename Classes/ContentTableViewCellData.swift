@@ -16,8 +16,11 @@ public protocol ContentTableViewCellData {
 
 public protocol ContentTableViewCustomCellData {
     
+    typealias Action = (_ vc: UIViewController?, _ cell: DetailViewCell, _ indexpath: IndexPath) -> Void
+    
     var cell: String { get }
     var height: CGFloat? { get }
     
-    var action: Any? { get }
+    var action: Action? { get }
 }
+

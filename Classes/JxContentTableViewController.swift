@@ -417,7 +417,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 }
             case let JxContentTableViewCell.TitleCell(config):
                 if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? TitleCell {
-                    
                     cell.titleLabel?.text = config.title
                     cell.accessibilityLabel = config.title
                     if let font = config.font {
@@ -433,7 +432,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     cell.setNeedsUpdateConstraints()
                     cell.updateAppearance()
                     return cell
-                    
                 }
             case let JxContentTableViewCell.ButtonCell(config):
                 if let cell = tableView.dequeueReusableCell(withIdentifier: data.reusableCellIdentifier, for: indexPath) as? ButtonCell {
@@ -650,7 +648,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             
             return newHeight
         }
-        return theme.tableViewCellDefaultHeight
+        return 0
     }
     open override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let c = cell as? DetailViewCell {
@@ -710,94 +708,79 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             let data = content[indexPath.section][indexPath.row]
             
             switch (data) {
-            case JxContentTableViewCell.GraphCell:
+            case .GraphCell(_):
                 break
-            case JxContentTableViewCell.BasicCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
-                        action(self, cell, indexPath)
-                    }
+            case .BasicCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
+                    action(self, cell, indexPath)
                 }
-                break
-            case JxContentTableViewCell.RightDetailCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
-                        action(self, cell, indexPath)
-                    }
+            case .RightDetailCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
+                    action(self, cell, indexPath)
                 }
-            case JxContentTableViewCell.SubtitleCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
-                        action(self, cell, indexPath)
-                    }
+            case .SubtitleCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
+                    action(self, cell, indexPath)
                 }
-            case JxContentTableViewCell.BubbleCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
-                        action(self, cell, indexPath)
-                    }
+            case .BubbleCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
+                    action(self, cell, indexPath)
                 }
-            case JxContentTableViewCell.LogoCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
-                        action(self, cell, indexPath)
-                    }
+            case .LogoCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
+                    action(self, cell, indexPath)
                 }
-            case JxContentTableViewCell.TitleCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
-                        action(self, cell, indexPath)
-                    }
+            case .TitleCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
+                    action(self, cell, indexPath)
                 }
-                break
-            case JxContentTableViewCell.SwitchCell:
-                if let action = data.getAction() as? DetailViewCell.SwitchCellAction {
-                    if let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
-                        
-                        var newValue = false
-#if os(OSX) || os(iOS)
-                        if let switchButton = cell.switchButton {
-                            newValue = !switchButton.isOn
-                            switchButton.setOn(newValue, animated: true)
-                        }
-#endif
-                        action(cell, indexPath, newValue)
+            case .SwitchCell(_):
+                if let action = data.getAction() as? DetailViewCell.SwitchCellAction,
+                   let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
+                    
+                    var newValue = false
+                    if let switchButton = cell.switchButton {
+                        newValue = !switchButton.isOn
+                        switchButton.setOn(newValue, animated: true)
                     }
+                    action(cell, indexPath, newValue)
                 }
+            case .InputCell(_):
                 break
-            case JxContentTableViewCell.InputCell:
+            case .UrlInputCell(_):
                 break
-            case JxContentTableViewCell.UrlInputCell:
+            case .StepperCell(_):
                 break
-            case JxContentTableViewCell.StepperCell:
-                break
-            case JxContentTableViewCell.ProgressCell:
-                if let action = data.getAction() as? DetailViewCell.ProgressCellAction {
-                    if let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
-                        var percent: Float = 0
-                        if let progressBar = cell.progressBar {
-                            percent = progressBar.progress
-                        }
-                        action(cell, indexPath, percent)
+            case .ProgressCell(_):
+                if let action = data.getAction() as? DetailViewCell.ProgressCellAction,
+                   let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
+                    var percent: Float = 0
+                    if let progressBar = cell.progressBar {
+                        percent = progressBar.progress
                     }
+                    action(cell, indexPath, percent)
                 }
-                break
-            case JxContentTableViewCell.ButtonCell:
-                if let action = data.getAction() as? ContentTableViewCellData.Action {
-                    if let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
-                        action(self, cell, indexPath)
-                    }
+            case .ButtonCell(_):
+                if let action = data.getAction() as? ContentTableViewCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
+                    action(self, cell, indexPath)
                 }
+            case .CaruselCell(_):
                 break
-            case JxContentTableViewCell.CaruselCell:
-                break
-            case JxContentTableViewCell.SegmentBarCell:
+            case .SegmentBarCell(_):
                 break
             case .CustomCell(_):
-                break
+                if let action = data.getAction() as? ContentTableViewCustomCellData.Action,
+                   let cell = tableView.cellForRow(at: indexPath) as? DetailViewCell {
+                    action(self, cell, indexPath)
+                }
             }
-            
-            
         }
     }
     
@@ -811,7 +794,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
             switch cellType {
             case .LogoCell:
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LogoCell {
-                    
                     cell.updateCell(withOffset: scrollView.contentOffset.y + self.tableView.layoutMargins.top)
                 }
             default:
