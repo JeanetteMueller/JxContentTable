@@ -241,6 +241,8 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.imageView?.accessibilityIgnoresInvertColors = true
                         cell.imageView?.layer.cornerRadius = config.height ?? 50 / 100 * theme.cornerRadiusPercent
                         cell.imageView?.layer.cornerCurve = .continuous
+                    }else {
+                        cell.imageView?.image = nil
                     }
                     
                     if config.action != nil {
@@ -589,7 +591,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 }
             }
             
-            
+            if minHeight == UITableView.automaticDimension && self.tableView.rowHeight == UITableView.automaticDimension {
+                return UITableView.automaticDimension
+            }
             
             if let text {
                 
@@ -616,7 +620,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 newHeight += CGFloat(ceilf(Float(rect.size.height)) + 12.0)
                 
             }
-            if let text = sub {
+            if let sub {
                 
                 if let customFont = subFont {
                     let theme = ThemeManager.currentTheme()
@@ -625,7 +629,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     }
                 }
                 
-                let attributedText = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: font as Any])
+                let attributedText = NSAttributedString(string: sub, attributes: [NSAttributedString.Key.font: font as Any])
                 
                 var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
                 
