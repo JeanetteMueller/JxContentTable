@@ -23,7 +23,7 @@ public extension DetailViewCell {
         var title: String?
         var font: UIFont?
         var image: UIImage?
-        var isSelected: Bool = false
+        var isSelected: Bool? = nil
         var align: NSTextAlignment = .left
         var textColor: UIColor?
         var hideDisclosureIndicator: Bool = false
@@ -33,7 +33,7 @@ public extension DetailViewCell {
     class func BasicCell(withTitle title: String?,
                          andHeight height: CGFloat? = nil,
                          andImage image: UIImage? = nil,
-                         isSelected selected: Bool = false,
+                         isSelected selected: Bool? = nil,
                          withTextAlign align: NSTextAlignment = .left,
                          andTextColor textColor: UIColor? = nil,
                          andHideDisclosureIndicator hideDisclosureIndicator: Bool = false,

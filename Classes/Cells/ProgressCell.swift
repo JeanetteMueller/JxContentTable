@@ -52,10 +52,9 @@ public class ProgressCell: DetailViewCell {
 
     public var downloadUrlString: String? {
         didSet {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.downloadDidUpdateNotification),
-                                                   name: Notification.Name("DownloadManagerTransferDidUpdate"),
-                                                   object: nil)
+            NotificationCenter.default.addObserver(forName: Notification.Name("DownloadManagerTransferDidUpdate"), object: nil, queue: .main) { [weak self] notification in
+                self?.downloadDidUpdateNotification(notification)
+            }
         }
     }
     public var textValue: String?
@@ -81,12 +80,14 @@ public class ProgressCell: DetailViewCell {
     deinit {
         if self.registeredForObserver == true {
             self.progressBar.removeObserver(self, forKeyPath: "observedProgress.fractionCompleted")
+            NotificationCenter.default.removeObserver(self)
             self.registeredForObserver = false
         }
     }
     public override func unloadCell() {
         if self.registeredForObserver == true {
             self.progressBar.removeObserver(self, forKeyPath: "observedProgress.fractionCompleted")
+            NotificationCenter.default.removeObserver(self)
             self.registeredForObserver = false
         }
     }
@@ -105,10 +106,8 @@ public class ProgressCell: DetailViewCell {
             }
         }
     }
-    @objc public func downloadDidUpdateNotification(_ notification: Notification) {
-
+    public func downloadDidUpdateNotification(_ notification: Notification) {
         if let task = notification.object as? URLSessionTask {
-
             self.updateProgress(withPercent: Float(task.progress.fractionCompleted), orProgress: task.progress)
         }
     }

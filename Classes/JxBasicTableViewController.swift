@@ -63,40 +63,37 @@ open class JxBasicTableViewController: UITableViewController {
     
     func updateVisibleTableHeader(_ headerView: BasicHeaderView? = nil) {
         let theme = ThemeManager.currentTheme()
+        
         var headers = [BasicHeaderView]()
-        
-        if let h = headerView {
-            headers.append(h)
-        }
-        
-        if let paths = self.tableView.indexPathsForVisibleRows {
-            
-            for path in paths {
-                autoreleasepool {
-                    
-                    if let h = self.tableView.headerView(forSection: path.section) as? BasicHeaderView {
-                        h.tag = path.section
-                        headers.append(h)
-                    }
-                    
+
+        if let header = headerView {
+            headers.append(header)
+        } else {
+            let sectionsCount = self.tableView.numberOfSections
+            for section in 0..<sectionsCount {
+                if let h = self.tableView.headerView(forSection: section) as? BasicHeaderView {
+                    h.tag = section
+                    headers.append(h)
                 }
             }
         }
         
+        let currentOffset = self.tableView.contentOffset.y + self.tableView.safeAreaInsets.top
+        
         for header in headers {
+            
             let headerFrame = self.tableView.rectForHeader(inSection: header.tag)
             
-            let distanceToTop = self.tableView.contentOffset.y - headerFrame.origin.y
-            
+            let distanceToTop: CGFloat = currentOffset - headerFrame.origin.y
             var alpha: CGFloat = distanceToTop / theme.headerBackgroundAlphaPerPixel
-            
+
             if alpha > 1 {
                 alpha = 1
             } else if alpha < 0 {
                 alpha = 0
             }
-            header.updateBackground(with: alpha)
             
+            header.updateBackground(with: alpha)
         }
     }
     

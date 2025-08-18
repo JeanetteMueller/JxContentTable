@@ -81,8 +81,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         self.prepareContent()
         
         self.updateAppearance()
-        
-        self.updateVisibleTableHeader()
     }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -153,13 +151,9 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     cell.cellLabel.textAlignment = config.align
                     
                     
-                    cell.accessoryType = .none
                     
-                    if config.isSelected == true {
-                        
-                        cell.accessoryType = .checkmark
-                        
-                    }else if config.action != nil {
+                    
+                    if config.action != nil {
                         if config.hideDisclosureIndicator == true {
                             cell.accessoryType = .none
                         }else{
@@ -170,6 +164,13 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.accessoryType = .none
                     }
                     
+                    if let selected = config.isSelected  {
+                        if selected == true {
+                            cell.accessoryType = .checkmark
+                        } else {
+                            cell.accessoryType = .none
+                        }
+                    }
                     
                     if let textColor = config.textColor {
                         cell.cellLabel.textColor = textColor
@@ -802,31 +803,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                 }
             default:
                 break
-            }
-        }
-        if let paths = self.tableView.indexPathsForVisibleRows {
-            
-            var section = -1
-            for path in paths {
-                autoreleasepool {
-                    if path.section != section {
-                        section = path.section
-                        
-                        if let headerView = self.tableView.headerView(forSection: section) as? BasicHeaderView {
-                            
-                            let cellFrame = self.tableView.rectForRow(at: IndexPath(row: 0, section: section))
-                            
-                            var alpha: CGFloat = ((headerView.frame.origin.y + headerView.frame.size.height ) - cellFrame.origin.y) / theme.headerBackgroundAlphaPerPixel
-                            
-                            if alpha > 1 {
-                                alpha = 1
-                            } else if alpha < 0 {
-                                alpha = 0
-                            }
-                            headerView.updateBackground(with: alpha)
-                        }
-                    }
-                }
             }
         }
         

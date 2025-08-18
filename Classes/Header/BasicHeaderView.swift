@@ -58,7 +58,6 @@ open class BasicHeaderView: UITableViewHeaderFooterView {
         }
         if self.backgroundView == nil {
             let b = UIView(frame: self.bounds)
-            b.backgroundColor = theme.tableViewHeadlineBackgroundColor.withAlphaComponent(useAlpha)
             self.backgroundView = b
         }
 
