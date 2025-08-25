@@ -792,7 +792,6 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     // MARK: ScrollviewDelegate
     //nicht als extension nutzbar da sonst override nicht mehr klappt
     open override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let theme = ThemeManager.currentTheme()
         if let contentSecondArray = self.content.first,
            let cellType = contentSecondArray.first{
             
