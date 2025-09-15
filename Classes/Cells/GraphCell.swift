@@ -157,7 +157,8 @@ public class GraphCell: DetailViewCell {
     }
 }
 
-extension GraphCell: ScrollableGraphViewDataSource {
+@MainActor
+extension GraphCell: @MainActor ScrollableGraphViewDataSource {
     public func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
         // Return the data for each plot.
 

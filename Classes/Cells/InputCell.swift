@@ -95,6 +95,7 @@ public class InputCell: DetailViewCell, UITextFieldDelegate {
     }
 }
 
+@MainActor
 protocol InputCellDelegate: AnyObject {
     func inputCell(cell: InputCell, sendInput input: String?)
     func inputCell(cell: InputCell, changedInput input: String?)

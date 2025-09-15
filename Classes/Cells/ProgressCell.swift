@@ -40,7 +40,6 @@ public extension DetailViewCell {
         
         return JxContentTableViewCell.ProgressCell(data)
     }
-
 }
 
 public class ProgressCell: DetailViewCell {
@@ -53,7 +52,11 @@ public class ProgressCell: DetailViewCell {
     public var downloadUrlString: String? {
         didSet {
             NotificationCenter.default.addObserver(forName: Notification.Name("DownloadManagerTransferDidUpdate"), object: nil, queue: .main) { [weak self] notification in
-                self?.downloadDidUpdateNotification(notification)
+                if let task = notification.object as? URLSessionTask {
+                    Task { @MainActor [weak self] in
+                        self?.updateProgress(withPercent: Float(task.progress.fractionCompleted), orProgress: task.progress)
+                    }
+                }
             }
         }
     }
@@ -69,19 +72,24 @@ public class ProgressCell: DetailViewCell {
         } else {
             self.progressBar.progress = percent
         }
-        self.updateText(self.progressBar, withFloatValue: percent)
+        self.updateText(floatValue: percent, isCurrent: true)
     }
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        DispatchQueue.main.async {
 
-            self.updateText(object, withFloatValue: 0)
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if let o = object as? UIProgressView {
+            Task { @MainActor in
+                var isCurrent = false
+                if o == self.progressBar {
+                    isCurrent = true
+                }
+                self.updateText(floatValue: 0, isCurrent: isCurrent)
+            }
         }
     }
     deinit {
         if self.registeredForObserver == true {
             self.progressBar.removeObserver(self, forKeyPath: "observedProgress.fractionCompleted")
             NotificationCenter.default.removeObserver(self)
-            self.registeredForObserver = false
         }
     }
     public override func unloadCell() {
@@ -91,24 +99,18 @@ public class ProgressCell: DetailViewCell {
             self.registeredForObserver = false
         }
     }
-    public func updateText(_ object: Any?, withFloatValue val: Float) {
-        if let o = object as? UIProgressView, o == self.progressBar {
-            if let p = o.observedProgress, p.fractionCompleted > 0.0 || self.textValue == nil {
+    public func updateText(floatValue val: Float, isCurrent: Bool) {
+        if isCurrent {
+            if let p = self.progressBar.observedProgress, p.fractionCompleted > 0.0 || self.textValue == nil {
                 self.titleLabel.textAlignment = .center
                 self.titleLabel.text = String(format: "%.2f %%", p.fractionCompleted*100)
             } else if val > 0.0 || self.textValue == nil {
                 self.titleLabel.textAlignment = .center
                 self.titleLabel.text = String(format: "%.2f %%", val)
-
             } else {
                 self.titleLabel.textAlignment = .left
                 self.titleLabel.text = self.textValue ?? ""
             }
-        }
-    }
-    public func downloadDidUpdateNotification(_ notification: Notification) {
-        if let task = notification.object as? URLSessionTask {
-            self.updateProgress(withPercent: Float(task.progress.fractionCompleted), orProgress: task.progress)
         }
     }
 }

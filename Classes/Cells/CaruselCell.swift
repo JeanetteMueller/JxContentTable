@@ -114,6 +114,8 @@ public class CaruselCell: DetailViewCell, UICollectionViewDelegate, UICollection
 
     }
 }
+
+@MainActor
 public protocol CaruselDelegate: AnyObject {
     func didSelectItem(_ item: CaruselItem)
 }

@@ -65,7 +65,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     open func reload() {
         self.prepareContent()
         
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.tableView.reloadData()
             
             self.updateVisibleTableHeader()
@@ -142,16 +142,15 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     
                     if let image = config.image {
                         cell.cellImageView.image = image
-                        
+                        cell.cellImageView.clipsToBounds = true
                         cell.cellImageView.accessibilityIgnoresInvertColors = true
-                        
+                        cell.cellImageView.layer.cornerRadius = (config.height ?? 50) / 100 * theme.cornerRadiusPercent
+                        cell.cellImageView.layer.cornerCurve = .continuous
                     } else {
                         cell.cellImageView.image = nil
                     }
+                    
                     cell.cellLabel.textAlignment = config.align
-                    
-                    
-                    
                     
                     if config.action != nil {
                         if config.hideDisclosureIndicator == true {
@@ -240,7 +239,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                         cell.imageView?.image = image
                         cell.imageView?.clipsToBounds = true
                         cell.imageView?.accessibilityIgnoresInvertColors = true
-                        cell.imageView?.layer.cornerRadius = config.height ?? 50 / 100 * theme.cornerRadiusPercent
+                        cell.imageView?.layer.cornerRadius = (config.height ?? 50) / 100 * theme.cornerRadiusPercent
                         cell.imageView?.layer.cornerCurve = .continuous
                     }else {
                         cell.imageView?.image = nil

@@ -78,6 +78,7 @@ public class UrlInputCell: DetailViewCell, UITextFieldDelegate {
     }
 }
 
+@MainActor
 public protocol UrlInputCellDelegate: AnyObject {
     func urlInputCell(cell: UrlInputCell, sendInput input: String)
     func urlInputCell(cell: UrlInputCell, changeInput input: String)

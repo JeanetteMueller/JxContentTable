@@ -168,38 +168,50 @@ public class StepperCell: DetailViewCell {
             self.longGestureTimer?.invalidate()
         }
     }
+
     func startRepeatTimer(_ sender: UILongPressGestureRecognizer) {
-        
         self.longGestureTimer?.invalidate()
         
         if sender.view == self.upButton {
-            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { (t) in
-                self.changeValue(self.stepSize * 5)
-                self.longGestureSteps += 1
-                
-                if self.longGestureSteps > 2.0 / self.longGestureInterval {
-                    self.longGestureSteps = 0
-                    if self.longGestureInterval > 0.05 {
-                        self.longGestureInterval -= 0.1
-                    }
-                    self.startRepeatTimer(sender)
+            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { [weak self] t in
+                Task { @MainActor in
+                    self?.upButtonAction(sender)
                 }
+                
             })
         }else if sender.view == self.downButton {
-            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { (t) in
-                self.changeValue(-(self.stepSize * 5))
-                self.longGestureSteps += 1
-                
-                if self.longGestureSteps > 2.0 / self.longGestureInterval {
-                    self.longGestureSteps = 0
-                    if self.longGestureInterval > 0.05 {
-                        self.longGestureInterval -= 0.1
-                    }
-                    self.startRepeatTimer(sender)
+            self.longGestureTimer = Timer.scheduledTimer(withTimeInterval: self.longGestureInterval, repeats: true, block: { [weak self] t in
+                Task { @MainActor in
+                    self?.downButtonAction(sender)
                 }
             })
         }
     }
+    private func upButtonAction(_ sender: UILongPressGestureRecognizer) {
+        self.changeValue(self.stepSize * 5)
+        self.longGestureSteps += 1
+        
+        if self.longGestureSteps > 2.0 / self.longGestureInterval {
+            self.longGestureSteps = 0
+            if self.longGestureInterval > 0.05 {
+                self.longGestureInterval -= 0.1
+            }
+            self.startRepeatTimer(sender)
+        }
+    }
+    private func downButtonAction(_ sender: UILongPressGestureRecognizer) {
+        self.changeValue(-(self.stepSize * 5))
+        self.longGestureSteps += 1
+        
+        if self.longGestureSteps > 2.0 / self.longGestureInterval {
+            self.longGestureSteps = 0
+            if self.longGestureInterval > 0.05 {
+                self.longGestureInterval -= 0.1
+            }
+            self.startRepeatTimer(sender)
+        }
+    }
+
     func changeValue(_ addition: Double) {
         log("changeValue \(addition)")
         let newValue = round(1000 * (defaultValue + addition)) / 1000
@@ -223,6 +235,7 @@ public class StepperCell: DetailViewCell {
     }
 }
 
+@MainActor
 public protocol StepperCellDelegate: AnyObject {
     func stepperCell(cell: StepperCell, changedValue value: Double)
 
