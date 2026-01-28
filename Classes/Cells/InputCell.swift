@@ -1,6 +1,6 @@
 //
 //  UrlInputCell.swift
-//  ProjectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 26.10.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.
@@ -20,7 +20,7 @@ public extension UITableViewController {
 
 public extension DetailViewCell {
 
-    typealias InputCellAction = (_ cell: InputCell, _ indexpath: IndexPath, _ value: String?, _ submit: Bool) -> Void
+    typealias InputCellAction = (_ cell: InputCell, _ indexpath: IndexPath, _ value: String?, _ submit: Bool) async -> Void
     
     struct InputCellData: ContentTableViewCellData {
         public var height: CGFloat?

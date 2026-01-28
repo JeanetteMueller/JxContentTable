@@ -1,6 +1,6 @@
 //
 //  DetailViewController+StepperCellDelegate.swift
-//  AcceptFiles
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 16.12.17.
 //  Copyright © 2017 Jeanette Müller. All rights reserved.
@@ -18,7 +18,9 @@ extension JxContentTableViewController: StepperCellDelegate {
                 let cellData = content[indexPath.section][indexPath.row]
 
                 if let action = cellData.getAction() as? DetailViewCell.StepperCellAction {
-                    action(cell, indexPath, value)
+                    self.cancellationTask {
+                        await action(cell, indexPath, value)
+                    }
                 }
             }
         }

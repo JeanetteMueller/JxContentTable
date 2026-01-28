@@ -1,6 +1,6 @@
 //
 //  SwitchCell.swift
-//  ProjectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 09.11.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.
@@ -18,7 +18,7 @@ public extension UITableViewController {
 
 public extension DetailViewCell {
 
-    typealias SwitchCellAction = (_ cell: SwitchCell, _ indexpath: IndexPath, _ on: Bool) -> Void
+    typealias SwitchCellAction = (_ cell: SwitchCell, _ indexpath: IndexPath, _ on: Bool) async -> Void
 
     struct SwitchCellData: ContentTableViewCellData {
         public var height: CGFloat?

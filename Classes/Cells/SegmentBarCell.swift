@@ -33,13 +33,13 @@ public extension DetailViewCell {
                                       titles: titles,
                                       colors: colors)
         
-//        let dict = ["cell": JxContentTableViewCell.SegmentBarCell,
-//                    "values": values as Any,
-//                    "titles": titles as Any,
-//                    "colors": colors as Any,
-//                    "height": 10 + 14 + 5 + 20 + 10
-//                    
-//        ]
+        //        let dict = ["cell": JxContentTableViewCell.SegmentBarCell,
+        //                    "values": values as Any,
+        //                    "titles": titles as Any,
+        //                    "colors": colors as Any,
+        //                    "height": 10 + 14 + 5 + 20 + 10
+        //
+        //        ]
         
         return JxContentTableViewCell.SegmentBarCell(data)
     }
@@ -78,10 +78,10 @@ public class SegmentBarCell: DetailViewCell {
         super.layoutSubviews()
         
         let theme = ThemeManager.currentTheme()
-
+        
         let legendText = NSMutableAttributedString()
         
-//        var lastYpos: CGFloat = 0
+        //        var lastYpos: CGFloat = 0
         
         var index = 0
         var lastXpos: CGFloat = 0
@@ -90,15 +90,15 @@ public class SegmentBarCell: DetailViewCell {
             if index != 0 {
                 legendText.append(NSAttributedString(string: ", ",
                                                      attributes: [
-                                                        NSAttributedString.Key.foregroundColor: theme.titleTextColor,
-                                                        NSAttributedString.Key.font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
+                                                        .foregroundColor: theme.titleTextColor,
+                                                        .font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
                                                      ]))
             }
             
             legendText.append(NSAttributedString(string: t,
                                                  attributes: [
-                                                    NSAttributedString.Key.foregroundColor: self.colors[index],
-                                                    NSAttributedString.Key.font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
+                                                    .foregroundColor: self.colors[index],
+                                                    .font: theme.getFont(name:  theme.fontRegular, size: theme.fontSizeContentMedium) as Any
                                                  ]))
             
             
@@ -119,7 +119,7 @@ public class SegmentBarCell: DetailViewCell {
         self.legend.attributedText = legendText
         
     }
-
+    
     public override func updateConstraints() {
         
         let theme = ThemeManager.currentTheme()

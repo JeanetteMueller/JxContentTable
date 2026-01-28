@@ -1,6 +1,6 @@
 //
 //  LogoCell.swift
-//  ProjectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 27.10.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.

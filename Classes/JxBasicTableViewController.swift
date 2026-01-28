@@ -9,7 +9,8 @@ import UIKit
 import JxThemeManager
 import JxSwiftHelper
 
-open class JxBasicTableViewController: UITableViewController {
+open class JxBasicTableViewController: UITableViewController, SendableTaskCancellation {
+    public var asyncTasks: [Task<Void, Never>] = []
     
     static var loadBundle: Bundle? {
         get {
@@ -54,7 +55,10 @@ open class JxBasicTableViewController: UITableViewController {
         
         self.setNeedsStatusBarAppearanceUpdate()
     }
-    
+    open override func viewDidDisappear(_ animated: Bool) {
+        self.cancelTasks()
+        super.viewDidDisappear(animated)
+    }
     open override func didReceiveMemoryWarning() {
         cleanCaches()
         

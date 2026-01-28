@@ -29,7 +29,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         super.viewDidLoad()
         
         registerCells()
-        
+        self.updateAppearance()
     }
     open func registerCells() {
         
@@ -54,7 +54,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     open func registerAllHeader() {
         
     }
-    open func prepareContent() {
+    open func prepareContent() async {
         log("the method \"prepareContent\" you have to override")
         
         self.headlines.removeAll()
@@ -63,24 +63,26 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
     }
     
     open func reload() {
-        self.prepareContent()
-        
-        Task { @MainActor in
-            self.tableView.reloadData()
+        self.cancellationTask { [weak self] in
+            await self?.prepareContent()
             
-            self.updateVisibleTableHeader()
+            self?.tableView.reloadData()
+            
+            self?.updateVisibleTableHeader()
         }
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-#if os(OSX) || os(iOS)
+
         self.tableView.separatorStyle = .none
-#endif
         
-        self.prepareContent()
-        
-        self.updateAppearance()
+        self.cancellationTask { [weak self] in
+            guard let self else { return }
+            await self.prepareContent()
+            
+            self.tableView.reloadData()
+        }
     }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -343,12 +345,12 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     cell.inputTextField.keyboardType = config.keyboardType
                     cell.inputTextField.returnKeyType = config.returnKeyType
                     cell.inputTextField.font = theme.getFont(name: theme.fontRegular, size: 16)
-                    let attributes = [
-                        NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor,
-                        NSAttributedString.Key.font: theme.getFont(name: theme.fontRegular, size: 16) as Any
-                    ]
                     
-                    cell.inputTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" , attributes: attributes)
+                    cell.inputTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" ,
+                                                                                   attributes: [
+                                                                                    .foregroundColor: theme.textFieldPlaceholderTextColor,
+                                                                                    .font: theme.getFont(name: theme.fontRegular, size: 16) as Any
+                                                                                   ])
                     
                     cell.delegate = self
                     cell.selectionStyle = .none
@@ -365,11 +367,11 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     cell.urlTextField.returnKeyType = config.returnKey
                     cell.urlTextField.font = theme.getFont(name: theme.fontRegular, size: 16)
                     
-                    let attributes = [
-                        NSAttributedString.Key.foregroundColor: theme.textFieldPlaceholderTextColor,
-                        NSAttributedString.Key.font: theme.getFont(name: theme.fontRegular, size: 16) as Any
-                    ]
-                    cell.urlTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" , attributes: attributes)
+                    cell.urlTextField.attributedPlaceholder = NSAttributedString(string: config.placeholder ?? "" ,
+                                                                                 attributes: [
+                                                                                    .foregroundColor: theme.textFieldPlaceholderTextColor,
+                                                                                    .font: theme.getFont(name: theme.fontRegular, size: 16) as Any
+                                                                                 ])
                     
                     cell.delegate = self
                     cell.selectionStyle = .none
@@ -604,7 +606,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     }
                 }
                 
-                let attributedText = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: font as Any])
+                let attributedText = NSAttributedString(string: text, attributes: [.font: font as Any])
                 
                 var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
                 
@@ -629,7 +631,7 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
                     }
                 }
                 
-                let attributedText = NSAttributedString(string: sub, attributes: [NSAttributedString.Key.font: font as Any])
+                let attributedText = NSAttributedString(string: sub, attributes: [.font: font as Any])
                 
                 var width = self.view.frame.size.width - (theme.contentInsetFromDisplayBorder * 2)
                 
@@ -708,81 +710,84 @@ open class JxContentTableViewController: JxBasicTableViewController, CaruselDele
         tableView.deselectRow(at: indexPath, animated: true)
         
         if content.count > indexPath.section && content[indexPath.section].count > indexPath.row {
-            
-            let data = content[indexPath.section][indexPath.row]
-            
-            switch (data) {
-            case .GraphCell(_):
-                break
-            case .BasicCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
-                    action(self, cell, indexPath)
-                }
-            case .RightDetailCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
-                    action(self, cell, indexPath)
-                }
-            case .SubtitleCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
-                    action(self, cell, indexPath)
-                }
-            case .BubbleCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
-                    action(self, cell, indexPath)
-                }
-            case .LogoCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
-                    action(self, cell, indexPath)
-                }
-            case .TitleCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
-                    action(self, cell, indexPath)
-                }
-            case .SwitchCell(_):
-                if let action = data.getAction() as? DetailViewCell.SwitchCellAction,
-                   let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
-                    
-                    var newValue = false
-                    if let switchButton = cell.switchButton {
-                        newValue = !switchButton.isOn
-                        switchButton.setOn(newValue, animated: true)
+            self.cancellationTask { [weak self] in
+                guard let self else { return }
+                
+                let data = content[indexPath.section][indexPath.row]
+                
+                switch (data) {
+                case .GraphCell(_):
+                    break
+                case .BasicCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? BasicCell {
+                        await action(self, cell, indexPath)
                     }
-                    action(cell, indexPath, newValue)
-                }
-            case .InputCell(_):
-                break
-            case .UrlInputCell(_):
-                break
-            case .StepperCell(_):
-                break
-            case .ProgressCell(_):
-                if let action = data.getAction() as? DetailViewCell.ProgressCellAction,
-                   let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
-                    var percent: Float = 0
-                    if let progressBar = cell.progressBar {
-                        percent = progressBar.progress
+                case .RightDetailCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? RightDetailCell {
+                        await action(self, cell, indexPath)
                     }
-                    action(cell, indexPath, percent)
-                }
-            case .ButtonCell(_):
-                if let action = data.getAction() as? ContentTableViewCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
-                    action(self, cell, indexPath)
-                }
-            case .CaruselCell(_):
-                break
-            case .SegmentBarCell(_):
-                break
-            case .CustomCell(_):
-                if let action = data.getAction() as? ContentTableViewCustomCellData.Action,
-                   let cell = tableView.cellForRow(at: indexPath) as? DetailViewCell {
-                    action(self, cell, indexPath)
+                case .SubtitleCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? SubtitleCell {
+                        await action(self, cell, indexPath)
+                    }
+                case .BubbleCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? BubbleCell {
+                        await action(self, cell, indexPath)
+                    }
+                case .LogoCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? LogoCell {
+                        await action(self, cell, indexPath)
+                    }
+                case .TitleCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? TitleCell {
+                        await action(self, cell, indexPath)
+                    }
+                case .SwitchCell(_):
+                    if let action = data.getAction() as? DetailViewCell.SwitchCellAction,
+                       let cell = tableView.cellForRow(at: indexPath) as? SwitchCell {
+                        
+                        var newValue = false
+                        if let switchButton = cell.switchButton {
+                            newValue = !switchButton.isOn
+                            switchButton.setOn(newValue, animated: true)
+                        }
+                        await action(cell, indexPath, newValue)
+                    }
+                case .InputCell(_):
+                    break
+                case .UrlInputCell(_):
+                    break
+                case .StepperCell(_):
+                    break
+                case .ProgressCell(_):
+                    if let action = data.getAction() as? DetailViewCell.ProgressCellAction,
+                       let cell = tableView.cellForRow(at: indexPath) as? ProgressCell {
+                        var percent: Float = 0
+                        if let progressBar = cell.progressBar {
+                            percent = progressBar.progress
+                        }
+                        await action(cell, indexPath, percent)
+                    }
+                case .ButtonCell(_):
+                    if let action = data.getAction() as? ContentTableViewCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? ButtonCell {
+                        await action(self, cell, indexPath)
+                    }
+                case .CaruselCell(_):
+                    break
+                case .SegmentBarCell(_):
+                    break
+                case .CustomCell(_):
+                    if let action = data.getAction() as? ContentTableViewCustomCellData.Action,
+                       let cell = tableView.cellForRow(at: indexPath) as? DetailViewCell {
+                        await action(self, cell, indexPath)
+                    }
                 }
             }
         }

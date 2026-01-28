@@ -93,6 +93,5 @@ public enum JxContentTableViewHeader: String {
     case SubscriptionsChangeStepper = "SubscriptionsChangeStepper"
     case SubscriptionsChangeOption = "SubscriptionsChangeOption"
     case PausedHeader = "PausedHeader"
-    case EpisodesCollectionHeaderView = "EpisodesCollectionHeaderView"
     case GroupsCollectionHeaderView = "GroupsCollectionHeaderView"
 }

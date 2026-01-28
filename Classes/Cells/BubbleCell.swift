@@ -1,6 +1,6 @@
 //
 //  StepperCell.swift
-//  ProjectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 05.12.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.

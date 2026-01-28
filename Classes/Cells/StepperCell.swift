@@ -1,6 +1,6 @@
 //
 //  StepperCell.swift
-//  ProjectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 05.12.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.
@@ -19,7 +19,7 @@ public extension UITableViewController {
 
 public extension DetailViewCell {
 
-    typealias StepperCellAction = (_ cell: StepperCell, _ indexpath: IndexPath, _ value: Double) -> Void
+    typealias StepperCellAction = (_ cell: StepperCell, _ indexpath: IndexPath, _ value: Double) async -> Void
 
     struct StepperCellData: ContentTableViewCellData {
         public var height: CGFloat?

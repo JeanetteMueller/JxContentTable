@@ -1,6 +1,6 @@
 //
 //  ProgressCell.swift
-//  projectPhoenix
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 08.12.16.
 //  Copyright © 2016 Jeanette Müller. All rights reserved.
@@ -16,7 +16,7 @@ public extension UITableViewController {
 }
 public extension DetailViewCell {
 
-    typealias ProgressCellAction = (_ cell: ProgressCell, _ indexpath: IndexPath, _ value: Float) -> Void
+    typealias ProgressCellAction = (_ cell: ProgressCell, _ indexpath: IndexPath, _ value: Float) async -> Void
 
     struct ProgressCellData: ContentTableViewCellData {
         public var height: CGFloat?

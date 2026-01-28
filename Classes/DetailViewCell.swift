@@ -1,6 +1,6 @@
 //
 //  DetailViewCell.swift
-//  Podcat 2
+//  JxContentTable
 //
 //  Created by Jeanette Müller on 05.04.17.
 //  Copyright © 2017 Jeanette Müller. All rights reserved.
